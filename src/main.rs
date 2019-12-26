@@ -39,7 +39,7 @@ fn main() -> Result<(), Error> {
             for (i, pixel) in frame.chunks_exact_mut(4).enumerate() {
                 let x = i % width as usize;
                 let y = i / width as usize;
-                let rgba = [image.get(x, y, 0), image.get(x, y, 1), image.get(x, y, 2), 0xff];
+                let rgba = [image.get(x, y, 0), image.get(x, y, 1), image.get(x, y, 2), 255];
                 pixel.copy_from_slice(&rgba);
             }
 
