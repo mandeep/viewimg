@@ -14,6 +14,7 @@ fn main() -> Result<(), Error> {
     let (width, height) = (800u32, 800u32);
 
     let file = env::args().skip(1).next().expect("Error: Please provide a valid HDR image path.");
+
     let image: ImageBuf<u8, Rgb> = io::read(file).unwrap();
     let mut resized_image = ImageBuf::new(width as usize, height as usize);
     transform::resize(&mut resized_image, &image, width as usize, height as usize);
@@ -25,6 +26,7 @@ fn main() -> Result<(), Error> {
         .with_title("Patina")
         .with_inner_size(size)
         .with_min_inner_size(size)
+        .with_resizable(true)
         .build(&event_loop)
         .unwrap();
 
