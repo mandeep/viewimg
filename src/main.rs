@@ -57,14 +57,16 @@ fn main() -> Result<(), Error> {
                 *control_flow = ControlFlow::Exit;
                 return;
             }
-        }
 
-        if let Some(size) = input.window_resized() {
-            let size = size.to_physical(window.hidpi_factor());
-            let width = size.width.round() as u32;
-            let height = size.height.round() as u32;
+            if let Some(size) = input.window_resized() {
+                let size = size.to_physical(window.hidpi_factor());
+                let new_width = size.width.round() as u32;
+                let new_height = size.height.round() as u32;
 
-            pixels.resize(width, height);
+                pixels.resize(new_width, new_height);
+            }
+
+            window.request_redraw();
         }
     });
 }
