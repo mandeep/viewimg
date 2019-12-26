@@ -1,0 +1,11 @@
+[package]
+name = "patina"
+version = "0.1.0"
+authors = ["mandeep <mandeep@users.noreply.github.com>"]
+edition = "2018"
+
+[dependencies]
+image2 = "0.11.3"
+pixels = "0.0.2"
+winit = "0.20.0-alpha5"
+winit_input_helper = "0.4.0-alpha4"
