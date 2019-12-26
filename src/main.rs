@@ -1,6 +1,6 @@
 use std::env;
 
-use image2::{io, Image, ImageBuf, Rgb};
+use image2::{io, Image, ImageBuf, Rgb, transform};
 use pixels::{Error, PixelsBuilder, SurfaceTexture};
 use pixels::wgpu::{Surface, TextureFormat};
 use winit::dpi::LogicalSize;
@@ -15,7 +15,8 @@ fn main() -> Result<(), Error> {
 
     let file = env::args().skip(1).next().expect("Error: Please provide a valid HDR image path.");
     let image: ImageBuf<u8, Rgb> = io::read(file).unwrap();
-    let (width, height) = (image.width() as u32, image.height() as u32);
+    let mut resized_image = ImageBuf::new(width as usize, height as usize);
+    transform::resize(&mut resized_image, &image, width as usize, height as usize);
 
     let event_loop = EventLoop::new();
     let mut input = WinitInputHelper::new();
@@ -41,7 +42,10 @@ fn main() -> Result<(), Error> {
             for (i, pixel) in frame.chunks_exact_mut(4).enumerate() {
                 let x = i % width as usize;
                 let y = i / width as usize;
-                let rgba = [image.get(x, y, 0), image.get(x, y, 1), image.get(x, y, 2), 255];
+                let rgba = [resized_image.get(x, y, 0),
+                            resized_image.get(x, y, 1),
+                            resized_image.get(x, y, 2),
+                            255];
                 pixel.copy_from_slice(&rgba);
             }
 
