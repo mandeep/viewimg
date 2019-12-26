@@ -52,5 +52,13 @@ fn main() -> Result<(), Error> {
                 return;
             }
         }
+
+        if let Some(size) = input.window_resized() {
+            let size = size.to_physical(window.hidpi_factor());
+            let width = size.width.round() as u32;
+            let height = size.height.round() as u32;
+
+            pixels.resize(width, height);
+        }
     });
 }
