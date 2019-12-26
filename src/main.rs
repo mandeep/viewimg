@@ -11,6 +11,8 @@ use winit_input_helper::WinitInputHelper;
 
 
 fn main() -> Result<(), Error> {
+    let (width, height) = (800u32, 800u32);
+
     let file = env::args().skip(1).next().expect("Error: Please provide a valid HDR image path.");
     let image: ImageBuf<u8, Rgb> = io::read(file).unwrap();
     let (width, height) = (image.width() as u32, image.height() as u32);
