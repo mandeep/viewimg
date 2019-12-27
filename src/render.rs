@@ -14,11 +14,12 @@ pub fn render(file: String, width: u32, height: u32) -> Result<(), Error> {
     transform::resize(&mut resized_image, &image, width as usize, height as usize);
 
     let event_loop = EventLoop::new();
-    let mut input = WinitInputHelper::new();
     let window = create_window(width, height, &event_loop);
     let surface = Surface::create(&window);
     let surface_texture = SurfaceTexture::new(width, height, surface);
     let mut pixels = Pixels::new(height, width, surface_texture).unwrap();
+
+    let mut input = WinitInputHelper::new();
 
     event_loop.run(move |event, _, control_flow| {
         if let Event::WindowEvent { event: WindowEvent::RedrawRequested, .. } = event {
