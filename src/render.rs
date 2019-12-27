@@ -33,7 +33,7 @@ pub fn render(file: String, width: u32, height: u32) -> Result<(), Error> {
 
     event_loop.run(move |event, _, control_flow| {
         if let Event::WindowEvent { event: WindowEvent::RedrawRequested, .. } = event {
-            draw_buffer(pixels.get_frame(), &resized_image);
+            draw_pixels(pixels.get_frame(), &resized_image);
             pixels.render();
         }
 
@@ -56,7 +56,7 @@ pub fn render(file: String, width: u32, height: u32) -> Result<(), Error> {
     });
 }
 
-fn draw_buffer(frame: &mut [u8], image: &ImageBuf<u8, Rgb>) {
+fn draw_pixels(frame: &mut [u8], image: &ImageBuf<u8, Rgb>) {
     let width = image.width();
 
     for (i, pixel) in frame.chunks_exact_mut(4).enumerate() {
