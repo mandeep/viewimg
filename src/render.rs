@@ -1,10 +1,10 @@
 use image2::{io, Image, ImageBuf, Rgb, transform};
-use pixels::{Error, Pixels, PixelsBuilder, SurfaceTexture};
-use pixels::wgpu::{Surface, TextureFormat};
+use pixels::{Error, Pixels, SurfaceTexture};
+use pixels::wgpu::Surface;
 use winit::dpi::LogicalSize;
 use winit::event::{Event, VirtualKeyCode, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
-use winit::window::WindowBuilder;
+use winit::window::{Window, WindowBuilder};
 use winit_input_helper::WinitInputHelper;
 
 
@@ -15,21 +15,10 @@ pub fn render(file: String, width: u32, height: u32) -> Result<(), Error> {
 
     let event_loop = EventLoop::new();
     let mut input = WinitInputHelper::new();
-    let size = LogicalSize::new(width as f64, height as f64);
-    let window = WindowBuilder::new()
-        .with_title("Patina")
-        .with_inner_size(size)
-        .with_min_inner_size(size)
-        .with_resizable(true)
-        .build(&event_loop)
-        .unwrap();
-
+    let window = create_window(width, height, &event_loop);
     let surface = Surface::create(&window);
     let surface_texture = SurfaceTexture::new(width, height, surface);
-    let mut pixels = PixelsBuilder::new(height, width, surface_texture)
-        .texture_format(TextureFormat::Rgba8UnormSrgb)
-        .build()
-        .unwrap();
+    let mut pixels = Pixels::new(height, width, surface_texture).unwrap();
 
     event_loop.run(move |event, _, control_flow| {
         if let Event::WindowEvent { event: WindowEvent::RedrawRequested, .. } = event {
