@@ -1,5 +1,5 @@
 use image2::{io, Image, ImageBuf, Rgb, transform};
-use pixels::{Error, PixelsBuilder, SurfaceTexture};
+use pixels::{Error, Pixels, PixelsBuilder, SurfaceTexture};
 use pixels::wgpu::{Surface, TextureFormat};
 use winit::dpi::LogicalSize;
 use winit::event::{Event, VirtualKeyCode, WindowEvent};
@@ -40,21 +40,17 @@ pub fn render(file: String, width: u32, height: u32) -> Result<(), Error> {
         if input.update(event) {
             if input.key_pressed(VirtualKeyCode::Escape) || input.quit() {
                 *control_flow = ControlFlow::Exit;
-                return;
             }
 
             if let Some(size) = input.window_resized() {
-                let size = size.to_physical(window.hidpi_factor());
-                let new_width = size.width.round() as u32;
-                let new_height = size.height.round() as u32;
-
-                pixels.resize(new_width, new_height);
+                resize_pixels(&mut pixels, size);
             }
 
             window.request_redraw();
         }
     });
 }
+
 
 fn draw_pixels(frame: &mut [u8], image: &ImageBuf<u8, Rgb>) {
     let width = image.width();
@@ -65,4 +61,12 @@ fn draw_pixels(frame: &mut [u8], image: &ImageBuf<u8, Rgb>) {
         let rgba = [image.get(x, y, 0), image.get(x, y, 1), image.get(x, y, 2), 255];
         pixel.copy_from_slice(&rgba);
     }
+}
+
+
+fn resize_pixels(pixels: &mut Pixels, size: LogicalSize) {
+    let new_width = size.width.round() as u32;
+    let new_height = size.height.round() as u32;
+
+    pixels.resize(new_width, new_height);
 }
