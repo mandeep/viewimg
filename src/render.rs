@@ -9,10 +9,7 @@ use winit_input_helper::WinitInputHelper;
 
 
 pub fn render(file: String, width: u32, height: u32) -> Result<(), Error> {
-    let image: ImageBuf<u8, Rgb> = io::read(file).unwrap();
-    let mut resized_image = ImageBuf::new(width as usize, height as usize);
-    transform::resize(&mut resized_image, &image, width as usize, height as usize);
-
+    let image = create_image(file, width, height);
     let event_loop = EventLoop::new();
     let window = create_window(width, height, &event_loop);
     let surface = Surface::create(&window);
@@ -23,7 +20,7 @@ pub fn render(file: String, width: u32, height: u32) -> Result<(), Error> {
 
     event_loop.run(move |event, _, control_flow| {
         if let Event::WindowEvent { event: WindowEvent::RedrawRequested, .. } = event {
-            draw_pixels(pixels.get_frame(), &resized_image);
+            draw_pixels(pixels.get_frame(), &image);
             pixels.render();
         }
 
@@ -39,6 +36,16 @@ pub fn render(file: String, width: u32, height: u32) -> Result<(), Error> {
             window.request_redraw();
         }
     });
+}
+
+
+fn create_image(file: String, width: u32, height: u32) -> ImageBuf<u8, Rgb> {
+    let image: ImageBuf<u8, Rgb> = io::read(file).unwrap();
+    let mut resized_image = ImageBuf::new(width as usize, height as usize);
+    transform::resize(&mut resized_image, &image, width as usize, height as usize);
+
+    resized_image
+
 }
 
 
