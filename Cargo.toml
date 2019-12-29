@@ -2,7 +2,12 @@
 name = "patina"
 version = "0.1.0"
 authors = ["mandeep <mandeep@users.noreply.github.com>"]
+license = "MIT"
 edition = "2018"
+description = "HDR image viewer"
+homepage = "https://github.com/mandeep/patina"
+repository = "https://github.com/mandeep/patina"
+documentation = "https://github.com/mandeep/patina"
 
 [dependencies]
 image2 = "0.11.3"
