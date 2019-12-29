@@ -14,7 +14,7 @@ pub fn render(file: String, width: u32, height: u32) -> Result<(), Error> {
     let window = create_window(width, height, &event_loop);
     let surface = Surface::create(&window);
     let surface_texture = SurfaceTexture::new(width, height, surface);
-    let mut pixels = Pixels::new(height, width, surface_texture).unwrap();
+    let mut pixels = Pixels::new(width, height, surface_texture).unwrap();
 
     let mut input = WinitInputHelper::new();
 
