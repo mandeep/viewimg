@@ -52,7 +52,7 @@ fn create_image(file: String, width: u32, height: u32) -> ImageBuf<u8, Rgb> {
 fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>) -> Window {
     let size = LogicalSize::new(width as f64, height as f64);
     let window = WindowBuilder::new()
-        .with_title("Patina")
+        .with_title("viewimg")
         .with_inner_size(size)
         .with_min_inner_size(size)
         .with_resizable(true)

@@ -1,13 +1,13 @@
 [package]
-name = "patina"
+name = "viewimg"
 version = "0.1.0"
 authors = ["mandeep <mandeep@users.noreply.github.com>"]
 license = "MIT"
 edition = "2018"
 description = "HDR image viewer"
-homepage = "https://github.com/mandeep/patina"
-repository = "https://github.com/mandeep/patina"
-documentation = "https://github.com/mandeep/patina"
+homepage = "https://github.com/mandeep/viewimg"
+repository = "https://github.com/mandeep/viewimg"
+documentation = "https://github.com/mandeep/viewimg"
 
 [dependencies]
 image2 = "0.11.3"
