@@ -1,4 +1,5 @@
 ![header](header.png "viewimg")
+[![crates](https://img.shields.io/crates/v/viewimg?style=flat-square)](https://crates.io/crates/viewimg) [![license](https://img.shields.io/crates/l/viewimg?style=flat-square)](https://crates.io/crates/viewimg)
 
 viewimg is an image viewer intended to be used with Radiance HDR images (and later OpenEXR images).
 
