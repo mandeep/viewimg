@@ -1171,7 +1171,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "viewimg"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "image2 0.11.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "pixels 0.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
