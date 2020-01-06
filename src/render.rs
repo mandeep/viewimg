@@ -39,8 +39,27 @@ pub fn render(file: String, width: u32, height: u32) -> Result<(), Error> {
 }
 
 
-fn create_image(file: String, width: u32, height: u32) -> ImageBuf<u8, Rgb> {
-    let image: ImageBuf<u8, Rgb> = io::read(file).unwrap();
+fn calculate_dimensions(image: &ImageBuf<u8, Rgb>, event_loop: &EventLoop<()>) -> (u32, u32, bool) {
+    if image.width() < event_loop.primary_monitor().size().width as usize &&
+       image.height() < event_loop.primary_monitor().size().height as usize {
+            (image.width() as u32, image.height() as u32, false)
+       } else {
+            let aspect_ratio = image.width() as f64 / image.height() as f64;
+
+            // subtract 100 pixels from the minimum dimension to account for window border
+            let minimum_dimension = event_loop.primary_monitor().size().width
+                .min(event_loop.primary_monitor().size().height) - 100.0;
+
+            if aspect_ratio > 1.0 {
+                (minimum_dimension as u32, (minimum_dimension * aspect_ratio) as u32, true)
+            } else {
+                ((minimum_dimension * aspect_ratio) as u32, minimum_dimension as u32, true)
+            }
+
+       }
+}
+
+
     let mut resized_image = ImageBuf::new(width as usize, height as usize);
     transform::resize(&mut resized_image, &image, width as usize, height as usize);
 
