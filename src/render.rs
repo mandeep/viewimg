@@ -15,6 +15,7 @@ pub fn render(file: String) -> Result<(), Error> {
     let (width, height, resize) = calculate_dimensions(&image, &event_loop);
     if resize { image = resize_image(&image, width, height) };
 
+    let window = create_window(width, height, &event_loop);
     let surface = Surface::create(&window);
     let surface_texture = SurfaceTexture::new(width, height, surface);
     let mut pixels = Pixels::new(width, height, surface_texture).unwrap();
