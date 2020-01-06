@@ -8,8 +8,7 @@ use winit::window::{Window, WindowBuilder};
 use winit_input_helper::WinitInputHelper;
 
 
-pub fn render(file: String, width: u32, height: u32) -> Result<(), Error> {
-    let image = create_image(file, width, height);
+pub fn render(file: String) -> Result<(), Error> {
     let event_loop = EventLoop::new();
     let window = create_window(width, height, &event_loop);
     let surface = Surface::create(&window);
