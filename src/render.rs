@@ -79,6 +79,7 @@ fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>) -> Window 
         .with_title("viewimg")
         .with_inner_size(size)
         .with_min_inner_size(size)
+        .with_max_inner_size(event_loop.primary_monitor().size().to_logical(1.0))
         .with_resizable(true)
         .build(&event_loop)
         .unwrap();
