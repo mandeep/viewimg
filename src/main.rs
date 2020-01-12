@@ -28,5 +28,4 @@ fn main() {
         eprintln!("ERROR: Could not read path. Please provide a valid HDR image path.");
         std::process::exit(1);
     }
-
 }

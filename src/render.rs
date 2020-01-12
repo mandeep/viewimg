@@ -1,96 +1,99 @@
 use std::path::Path;
 
-use image2::{Image, ImageBuf, Rgb, transform};
-use pixels::{Error, Pixels, SurfaceTexture};
+use image2::{transform, Image, ImageBuf, Rgb};
 use pixels::wgpu::Surface;
+use pixels::{Error, Pixels, SurfaceTexture};
 use winit::dpi::LogicalSize;
 use winit::event::{Event, VirtualKeyCode, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
 use winit::window::{Window, WindowBuilder};
 use winit_input_helper::WinitInputHelper;
 
-
 pub fn render(mut image: ImageBuf<u8, Rgb>, file: &Path) -> Result<(), Error> {
     let event_loop = EventLoop::new();
 
     let (width, height, resize) = calculate_dimensions(&image, &event_loop);
-    if resize { image = resize_image(&image, width, height) };
+    if resize {
+        image = resize_image(&image, width, height)
+    };
 
     let window = create_window(width, height, &event_loop, file);
     let mut pixels = create_pixel_buffer(&window, width, height);
     let mut input = WinitInputHelper::new();
 
     event_loop.run(move |event, _, control_flow| {
-        if let Event::WindowEvent { event: WindowEvent::RedrawRequested, .. } = event {
-            draw_pixels(pixels.get_frame(), &image);
-            pixels.render();
-        }
+                  if let Event::WindowEvent { event: WindowEvent::RedrawRequested,
+                                              .. } = event
+                  {
+                      draw_pixels(pixels.get_frame(), &image);
+                      pixels.render();
+                  }
 
-        if input.update(event) {
-            if input.key_pressed(VirtualKeyCode::Escape) || input.quit() {
-                *control_flow = ControlFlow::Exit;
-            }
+                  if input.update(event) {
+                      if input.key_pressed(VirtualKeyCode::Escape) || input.quit() {
+                          *control_flow = ControlFlow::Exit;
+                      }
 
-            if let Some(size) = input.window_resized() {
-                resize_pixels(&mut pixels, size);
-            }
+                      if let Some(size) = input.window_resized() {
+                          resize_pixels(&mut pixels, size);
+                      }
 
-            window.request_redraw();
-        }
-    });
+                      window.request_redraw();
+                  }
+              });
 }
-
 
 fn calculate_dimensions(image: &ImageBuf<u8, Rgb>, event_loop: &EventLoop<()>) -> (u32, u32, bool) {
-    if image.width() < event_loop.primary_monitor().size().width as usize &&
-       image.height() < event_loop.primary_monitor().size().height as usize {
-            (image.width() as u32, image.height() as u32, false)
-       } else {
-            let aspect_ratio = image.width() as f64 / image.height() as f64;
+    if image.width() < event_loop.primary_monitor().size().width as usize
+       && image.height() < event_loop.primary_monitor().size().height as usize
+    {
+        (image.width() as u32, image.height() as u32, false)
+    } else {
+        let aspect_ratio = image.width() as f64 / image.height() as f64;
 
-            // subtract 100 pixels from the minimum dimension to account for window border
-            let minimum_dimension = event_loop.primary_monitor().size().width
-                .min(event_loop.primary_monitor().size().height) - 100.0;
+        // subtract 100 pixels from the minimum dimension to account for window border
+        let minimum_dimension = event_loop.primary_monitor()
+                                          .size()
+                                          .width
+                                          .min(event_loop.primary_monitor().size().height)
+                                - 100.0;
 
-            if aspect_ratio > 1.0 {
-                (minimum_dimension as u32, (minimum_dimension * aspect_ratio) as u32, true)
-            } else {
-                ((minimum_dimension * aspect_ratio) as u32, minimum_dimension as u32, true)
-            }
-
-       }
+        if aspect_ratio > 1.0 {
+            (minimum_dimension as u32, (minimum_dimension * aspect_ratio) as u32, true)
+        } else {
+            ((minimum_dimension * aspect_ratio) as u32, minimum_dimension as u32, true)
+        }
+    }
 }
-
 
 fn resize_image(image: &ImageBuf<u8, Rgb>, width: u32, height: u32) -> ImageBuf<u8, Rgb> {
     let mut resized_image = ImageBuf::new(width as usize, height as usize);
     transform::resize(&mut resized_image, image, width as usize, height as usize);
 
     resized_image
-
 }
-
 
 fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Path) -> Window {
     let size = LogicalSize::new(width as f64, height as f64);
 
     let filename = file.file_name()
-        .unwrap_or(std::ffi::OsStr::new("viewimg"))
-        .to_str()
-        .unwrap_or("viewimg");
+                       .unwrap_or(std::ffi::OsStr::new("viewimg"))
+                       .to_str()
+                       .unwrap_or("viewimg");
 
-    let window = WindowBuilder::new()
-        .with_title(filename)
-        .with_inner_size(size)
-        .with_min_inner_size(size)
-        .with_max_inner_size(event_loop.primary_monitor().size().to_logical(1.0))
-        .with_resizable(true)
-        .build(&event_loop)
-        .unwrap();
+    let window =
+        WindowBuilder::new().with_title(filename)
+                            .with_inner_size(size)
+                            .with_min_inner_size(size)
+                            .with_max_inner_size(event_loop.primary_monitor()
+                                                           .size()
+                                                           .to_logical(1.0))
+                            .with_resizable(true)
+                            .build(&event_loop)
+                            .unwrap();
 
     window
 }
-
 
 fn create_pixel_buffer(window: &Window, width: u32, height: u32) -> Pixels {
     let surface = Surface::create(window);
@@ -98,18 +101,19 @@ fn create_pixel_buffer(window: &Window, width: u32, height: u32) -> Pixels {
     Pixels::new(width, height, surface_texture).unwrap()
 }
 
-
 fn draw_pixels(frame: &mut [u8], image: &ImageBuf<u8, Rgb>) {
     let width = image.width();
 
     for (i, pixel) in frame.chunks_exact_mut(4).enumerate() {
         let x = i % width as usize;
         let y = i / width as usize;
-        let rgba = [image.get(x, y, 0), image.get(x, y, 1), image.get(x, y, 2), 255];
+        let rgba = [image.get(x, y, 0),
+                    image.get(x, y, 1),
+                    image.get(x, y, 2),
+                    255];
         pixel.copy_from_slice(&rgba);
     }
 }
-
 
 fn resize_pixels(pixels: &mut Pixels, size: LogicalSize) {
     let new_width = size.width.round() as u32;
