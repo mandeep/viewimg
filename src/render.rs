@@ -17,10 +17,7 @@ pub fn render(mut image: ImageBuf<u8, Rgb>, file: &Path) -> Result<(), Error> {
     if resize { image = resize_image(&image, width, height) };
 
     let window = create_window(width, height, &event_loop, file);
-    let surface = Surface::create(&window);
-    let surface_texture = SurfaceTexture::new(width, height, surface);
-    let mut pixels = Pixels::new(width, height, surface_texture).unwrap();
-
+    let mut pixels = create_pixel_buffer(&window, width, height);
     let mut input = WinitInputHelper::new();
 
     event_loop.run(move |event, _, control_flow| {
@@ -92,6 +89,13 @@ fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Pat
         .unwrap();
 
     window
+}
+
+
+fn create_pixel_buffer(window: &Window, width: u32, height: u32) -> Pixels {
+    let surface = Surface::create(window);
+    let surface_texture = SurfaceTexture::new(width, height, surface);
+    Pixels::new(width, height, surface_texture).unwrap()
 }
 
 
