@@ -1,4 +1,6 @@
-use image2::{io, Image, ImageBuf, Rgb, transform};
+use std::path::Path;
+
+use image2::{Image, ImageBuf, Rgb, transform};
 use pixels::{Error, Pixels, SurfaceTexture};
 use pixels::wgpu::Surface;
 use winit::dpi::LogicalSize;
@@ -8,8 +10,7 @@ use winit::window::{Window, WindowBuilder};
 use winit_input_helper::WinitInputHelper;
 
 
-pub fn render(file: String) -> Result<(), Error> {
-    let mut image: ImageBuf<u8, Rgb> = io::read(file).unwrap();
+pub fn render(mut image: ImageBuf<u8, Rgb>, file: &Path) -> Result<(), Error> {
     let event_loop = EventLoop::new();
 
     let (width, height, resize) = calculate_dimensions(&image, &event_loop);
