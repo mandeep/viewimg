@@ -16,7 +16,7 @@ pub fn render(mut image: ImageBuf<u8, Rgb>, file: &Path) -> Result<(), Error> {
     let (width, height, resize) = calculate_dimensions(&image, &event_loop);
     if resize { image = resize_image(&image, width, height) };
 
-    let window = create_window(width, height, &event_loop);
+    let window = create_window(width, height, &event_loop, file);
     let surface = Surface::create(&window);
     let surface_texture = SurfaceTexture::new(width, height, surface);
     let mut pixels = Pixels::new(width, height, surface_texture).unwrap();
@@ -74,10 +74,16 @@ fn resize_image(image: &ImageBuf<u8, Rgb>, width: u32, height: u32) -> ImageBuf<
 }
 
 
-fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>) -> Window {
+fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Path) -> Window {
     let size = LogicalSize::new(width as f64, height as f64);
+
+    let filename = file.file_name()
+        .unwrap_or(std::ffi::OsStr::new("viewimg"))
+        .to_str()
+        .unwrap_or("viewimg");
+
     let window = WindowBuilder::new()
-        .with_title("viewimg")
+        .with_title(filename)
         .with_inner_size(size)
         .with_min_inner_size(size)
         .with_max_inner_size(event_loop.primary_monitor().size().to_logical(1.0))
