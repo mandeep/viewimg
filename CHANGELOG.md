@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.2.2] - 2020-01-11
+### Changed
+- Window title shows the filename of the opened image
+- Error messages have been edited to be more clear
+
+
 ## [0.2.1] - 2020-01-06
 ### Added
 - Added this CHANGELOG to the project
