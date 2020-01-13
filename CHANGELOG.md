@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.2.3] - 2020-01-13
+### Added
+- Added a more detailed description in the README
+
+
 ## [0.2.2] - 2020-01-11
 ### Changed
 - Window title shows the filename of the opened image
