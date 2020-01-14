@@ -4,8 +4,8 @@
 viewimg is an image viewer intended to be used with Radiance HDR images (and later OpenEXR images).
 The goal of viewimg is to be a cross-platform image viewer that quickly opens HDR images with
 the purpose of instantly seeing the image contents. There is no editing component to this
-application, therefore tone mapping and other HDR editing operators are not the intention of
-viewimg.
+application, therefore tone mapping and other HDR editing operators are not supported.
+The typical use case of viewimg would be to view HDR images immediately after rendering.
 
 
 Installation
