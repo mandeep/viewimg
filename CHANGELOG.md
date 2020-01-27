@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.2.4] - 2020-01-27
+### Fixed
+- Fixed the resizing of images where the image is larger than the display and the aspect ratio is greater than 1.0
+
+
 ## [0.2.3] - 2020-01-13
 ### Added
 - Added a more detailed description in the README
