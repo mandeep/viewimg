@@ -57,12 +57,7 @@ fn calculate_dimensions(image: &ImageBuf<u8, Rgb>, event_loop: &EventLoop<()>) -
                                           .width
                                           .min(event_loop.primary_monitor().size().height)
                                 - 100.0;
-
-        if aspect_ratio > 1.0 {
-            (minimum_dimension as u32, (minimum_dimension * aspect_ratio) as u32, true)
-        } else {
-            ((minimum_dimension * aspect_ratio) as u32, minimum_dimension as u32, true)
-        }
+        ((minimum_dimension * aspect_ratio) as u32, minimum_dimension as u32, true)
     }
 }
 
