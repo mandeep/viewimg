@@ -4,7 +4,7 @@ use image2::{transform, Image, ImageBuf, Rgb};
 use pixels::wgpu::Surface;
 use pixels::{Error, Pixels, SurfaceTexture};
 use winit::dpi::LogicalSize;
-use winit::event::{Event, VirtualKeyCode, WindowEvent};
+use winit::event::{Event, VirtualKeyCode};
 use winit::event_loop::{ControlFlow, EventLoop};
 use winit::window::{Window, WindowBuilder};
 use winit_input_helper::WinitInputHelper;
@@ -22,25 +22,25 @@ pub fn render(mut image: ImageBuf<u8, Rgb>, file: &Path) -> Result<(), Error> {
     let mut input = WinitInputHelper::new();
 
     event_loop.run(move |event, _, control_flow| {
-                  if let Event::WindowEvent { event: WindowEvent::RedrawRequested,
-                                              .. } = event
-                  {
-                      draw_pixels(pixels.get_frame(), &image);
-                      pixels.render();
-                  }
-
-                  if input.update(event) {
+          match event {
+             Event::RedrawRequested(_) => {
+                  draw_pixels(pixels.get_frame(), &image);
+                  pixels.render();
+              }
+              _ =>  { if input.update(event) {
                       if input.key_pressed(VirtualKeyCode::Escape) || input.quit() {
                           *control_flow = ControlFlow::Exit;
                       }
 
                       if let Some(size) = input.window_resized() {
-                          resize_pixels(&mut pixels, size);
+                          resize_pixels(&mut pixels, size.to_logical(1.0));
                       }
 
                       window.request_redraw();
                   }
-              });
+              }
+          }
+    });
 }
 
 fn calculate_dimensions(image: &ImageBuf<u8, Rgb>, event_loop: &EventLoop<()>) -> (u32, u32, bool) {
@@ -55,7 +55,7 @@ fn calculate_dimensions(image: &ImageBuf<u8, Rgb>, event_loop: &EventLoop<()>) -
         let minimum_dimension = event_loop.primary_monitor()
                                           .size()
                                           .width
-                                          .min(event_loop.primary_monitor().size().height)
+                                          .min(event_loop.primary_monitor().size().height) as f64
                                 - 100.0;
         ((minimum_dimension * aspect_ratio) as u32, minimum_dimension as u32, true)
     }
@@ -82,7 +82,7 @@ fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Pat
                             .with_min_inner_size(size)
                             .with_max_inner_size(event_loop.primary_monitor()
                                                            .size()
-                                                           .to_logical(1.0))
+                                                           .to_logical::<f64>(1.0))
                             .with_resizable(true)
                             .build(&event_loop)
                             .unwrap();
@@ -110,7 +110,7 @@ fn draw_pixels(frame: &mut [u8], image: &ImageBuf<u8, Rgb>) {
     }
 }
 
-fn resize_pixels(pixels: &mut Pixels, size: LogicalSize) {
+fn resize_pixels(pixels: &mut Pixels, size: LogicalSize<f32>) {
     let new_width = size.width.round() as u32;
     let new_height = size.height.round() as u32;
 

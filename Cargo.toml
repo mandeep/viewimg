@@ -13,8 +13,8 @@ readme = "README.md"
 [dependencies]
 image2 = "0.11.3"
 pixels = "0.0.2"
-winit = "=0.20.0-alpha5"
-winit_input_helper = "0.4.0-alpha4"
+winit = "0.21"
+winit_input_helper = "0.5"
 
 [profile.dev]
 opt-level = 3
