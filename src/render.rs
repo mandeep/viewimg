@@ -110,7 +110,7 @@ fn draw_pixels(frame: &mut [u8], image: &ImageBuf<u8, Rgb>) {
     }
 }
 
-fn resize_pixels(pixels: &mut Pixels, size: LogicalSize<f32>) {
+fn resize_pixels(pixels: &mut Pixels, size: LogicalSize<f64>) {
     let new_width = size.width.round() as u32;
     let new_height = size.height.round() as u32;
 
