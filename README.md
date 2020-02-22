@@ -13,6 +13,8 @@ Installation
 
 To install viewimg run `cargo install viewimg` in a terminal prompt.
 
+Note: Vulkan must be installed on the target system in order for viewimg to work correctly.
+
 Usage
 =====
 
