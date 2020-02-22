@@ -19,3 +19,6 @@ winit_input_helper = "0.5"
 [profile.dev]
 opt-level = 3
 debug = true
+
+[profile.release]
+lto = true
