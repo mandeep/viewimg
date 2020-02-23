@@ -21,4 +21,9 @@ Usage
 To use viewimg you can run `viewimg` in a terminal with the path to the
 image file that you wish to open:
 
-    $  viewimg ../my_hdr_image.hdr
+    $  viewimg ../cornell_box_denoised.hdr
+
+Screenshot
+==========
+
+![screenshot](screenshot.png "viewimg window screenshot")
