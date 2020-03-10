@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.3.0] - 2020-03-10
+### Added
+- Add support of OpenExr files via the `exr` crate
+
 ## [0.2.4] - 2020-01-27
 ### Fixed
 - Fixed the resizing of images where the image is larger than the display and the aspect ratio is greater than 1.0
