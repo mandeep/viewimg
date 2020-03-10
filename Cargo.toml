@@ -11,6 +11,7 @@ documentation = "https://github.com/mandeep/viewimg"
 readme = "README.md"
 
 [dependencies]
+exr = "0.7"
 image2 = "0.11.3"
 pixels = "0.0.2"
 winit = "0.21"
