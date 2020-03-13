@@ -1,6 +1,6 @@
-use exr;
+use exr::image::rgba::{Image, Pixels};
 
-pub fn extract_exr_data(image: &exr::image::rgba::Image) -> Vec<u8> {
+pub fn extract_exr_data(image: &Image) -> Vec<u8> {
     let (width, height) = (image.resolution.0, image.resolution.1);
 
     let mut exr_data = vec![0u8; width as usize * height as usize * 3];
@@ -11,7 +11,7 @@ pub fn extract_exr_data(image: &exr::image::rgba::Image) -> Vec<u8> {
         let index = image.vector_index_of_first_pixel_component(exr::math::Vec2(x, y));
 
         match &image.data {
-            exr::image::rgba::Pixels::F32(data) => {
+            Pixels::F32(data) => {
                 exr_data[3 * i + 0] =
                     (gamma_correct(clamp_f32(data[index + 0], 0.0, 1.0), 2.0) * 255.0) as u8;
                 exr_data[3 * i + 1] =

@@ -1,8 +1,9 @@
 use std::env;
 use std::path::Path;
 
-use exr;
-use image2;
+use exr::image::read_options;
+use exr::image::rgba::Image;
+use image2::{io, ImageBuf, Rgb};
 
 mod render;
 mod utils;
@@ -20,15 +21,12 @@ fn main() {
     if filepath.is_file() {
         if let Some(extension) = filepath.extension() {
             if extension == "exr" {
-                if let Ok(exr_image) =
-                    exr::image::rgba::Image::read_from_file(filepath,
-                                                            exr::image::read_options::high())
-                {
+                if let Ok(exr_image) = Image::read_from_file(filepath, read_options::high()) {
                     let exr_data = extract_exr_data(&exr_image);
-                    let exr_image_buffer: image2::ImageBuf<u8, image2::Rgb> =
-                        image2::ImageBuf::new_from(exr_image.resolution.0,
-                                                   exr_image.resolution.1,
-                                                   exr_data);
+                    let exr_image_buffer: ImageBuf<u8, Rgb> =
+                        ImageBuf::new_from(exr_image.resolution.0,
+                                           exr_image.resolution.1,
+                                           exr_data);
 
                     if let Err(error) = render(exr_image_buffer, filepath) {
                         eprintln!("{}", error);
@@ -40,7 +38,7 @@ fn main() {
                     std::process::exit(1);
                 }
             } else {
-                if let Ok(hdr_image_buffer) = image2::io::read(filepath) {
+                if let Ok(hdr_image_buffer) = io::read(filepath) {
                     if let Err(error) = render(hdr_image_buffer, filepath) {
                         eprintln!("{}", error);
                         std::process::exit(1);
