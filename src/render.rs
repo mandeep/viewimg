@@ -21,26 +21,25 @@ pub fn render(mut image: ImageBuf<u8, Rgb>, file: &Path) -> Result<(), Error> {
     let mut pixels = create_pixel_buffer(&window, width, height);
     let mut input = WinitInputHelper::new();
 
-    event_loop.run(move |event, _, control_flow| {
-          match event {
-             Event::RedrawRequested(_) => {
-                  draw_pixels(pixels.get_frame(), &image);
-                  pixels.render();
-              }
-              _ =>  { if input.update(event) {
-                      if input.key_pressed(VirtualKeyCode::Escape) || input.quit() {
-                          *control_flow = ControlFlow::Exit;
-                      }
-
-                      if let Some(size) = input.window_resized() {
-                          resize_pixels(&mut pixels, size.to_logical(1.0));
-                      }
-
-                      window.request_redraw();
+    event_loop.run(move |event, _, control_flow| match event {
+                  Event::RedrawRequested(_) => {
+                      draw_pixels(pixels.get_frame(), &image);
+                      pixels.render();
                   }
-              }
-          }
-    });
+                  _ => {
+                      if input.update(event) {
+                          if input.key_pressed(VirtualKeyCode::Escape) || input.quit() {
+                              *control_flow = ControlFlow::Exit;
+                          }
+
+                          if let Some(size) = input.window_resized() {
+                              resize_pixels(&mut pixels, size.to_logical(1.0));
+                          }
+
+                          window.request_redraw();
+                      }
+                  }
+              });
 }
 
 fn calculate_dimensions(image: &ImageBuf<u8, Rgb>, event_loop: &EventLoop<()>) -> (u32, u32, bool) {
@@ -55,7 +54,8 @@ fn calculate_dimensions(image: &ImageBuf<u8, Rgb>, event_loop: &EventLoop<()>) -
         let minimum_dimension = event_loop.primary_monitor()
                                           .size()
                                           .width
-                                          .min(event_loop.primary_monitor().size().height) as f64
+                                          .min(event_loop.primary_monitor().size().height)
+                                as f64
                                 - 100.0;
         ((minimum_dimension * aspect_ratio) as u32, minimum_dimension as u32, true)
     }
@@ -71,21 +71,18 @@ fn resize_image(image: &ImageBuf<u8, Rgb>, width: u32, height: u32) -> ImageBuf<
 fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Path) -> Window {
     let size = LogicalSize::new(width as f64, height as f64);
 
-    let filename = file.file_name()
-                       .unwrap_or(std::ffi::OsStr::new("viewimg"))
-                       .to_str()
-                       .unwrap_or("viewimg");
+    let filename =
+        file.file_name().unwrap_or(std::ffi::OsStr::new("viewimg")).to_str().unwrap_or("viewimg");
 
-    let window =
-        WindowBuilder::new().with_title(filename)
-                            .with_inner_size(size)
-                            .with_min_inner_size(size)
-                            .with_max_inner_size(event_loop.primary_monitor()
-                                                           .size()
-                                                           .to_logical::<f64>(1.0))
-                            .with_resizable(true)
-                            .build(&event_loop)
-                            .unwrap();
+    let window = WindowBuilder::new().with_title(filename)
+                                     .with_inner_size(size)
+                                     .with_min_inner_size(size)
+                                     .with_max_inner_size(event_loop.primary_monitor()
+                                                                    .size()
+                                                                    .to_logical::<f64>(1.0))
+                                     .with_resizable(true)
+                                     .build(&event_loop)
+                                     .unwrap();
 
     window
 }
@@ -102,10 +99,7 @@ fn draw_pixels(frame: &mut [u8], image: &ImageBuf<u8, Rgb>) {
     for (i, pixel) in frame.chunks_exact_mut(4).enumerate() {
         let x = i % width as usize;
         let y = i / width as usize;
-        let rgba = [image.get(x, y, 0),
-                    image.get(x, y, 1),
-                    image.get(x, y, 2),
-                    255];
+        let rgba = [image.get(x, y, 0), image.get(x, y, 1), image.get(x, y, 2), 255];
         pixel.copy_from_slice(&rgba);
     }
 }

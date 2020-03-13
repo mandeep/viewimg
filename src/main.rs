@@ -34,7 +34,6 @@ fn main() {
                         eprintln!("{}", error);
                         std::process::exit(1);
                     }
-
                 } else {
                     eprintln!("ERROR: Failed to read OpenEXR image. Please make sure it is a \
                                valid image file.");
