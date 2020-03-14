@@ -13,7 +13,7 @@ pub fn extract_exr_data(image: &Image) -> Vec<u8> {
         let data: (f32, f32, f32) = match &image.data {
             Pixels::F32(data) => (data[index + 0], data[index + 1], data[index + 2]),
             Pixels::F16(data) => (data[index + 0].to_f32(), data[index + 1].to_f32(), data[index + 2].to_f32()),
-            _ => unimplemented!(),
+            Pixels::U32(data) => (data[index + 0] as f32, data[index + 1] as f32, data[index + 2] as f32),
         };
 
         exr_data[3 * i + 0] =
