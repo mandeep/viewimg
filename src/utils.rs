@@ -10,30 +10,18 @@ pub fn extract_exr_data(image: &Image) -> Vec<u8> {
         let y = i / width as usize;
         let index = image.vector_index_of_first_pixel_component(exr::math::Vec2(x, y));
 
-        match &image.data {
-            Pixels::F32(data) => {
-                exr_data[3 * i + 0] =
-                    (gamma_correct(clamp_f32(data[index + 0], 0.0, 1.0), 2.0) * 255.0) as u8;
-                exr_data[3 * i + 1] =
-                    (gamma_correct(clamp_f32(data[index + 1], 0.0, 1.0), 2.0) * 255.0) as u8;
-                exr_data[3 * i + 2] =
-                    (gamma_correct(clamp_f32(data[index + 2], 0.0, 1.0), 2.0) * 255.0) as u8;
-            }
-
-            Pixels::F16(data) => {
-                exr_data[3 * i + 0] = (gamma_correct(clamp_f32(data[index + 0].to_f32(), 0.0, 1.0),
-                                                     2.0)
-                                       * 255.0) as u8;
-                exr_data[3 * i + 1] = (gamma_correct(clamp_f32(data[index + 1].to_f32(), 0.0, 1.0),
-                                                     2.0)
-                                       * 255.0) as u8;
-                exr_data[3 * i + 2] = (gamma_correct(clamp_f32(data[index + 2].to_f32(), 0.0, 1.0),
-                                                     2.0)
-                                       * 255.0) as u8;
-            }
-
+        let data: (f32, f32, f32) = match &image.data {
+            Pixels::F32(data) => (data[index + 0], data[index + 1], data[index + 2]),
+            Pixels::F16(data) => (data[index + 0].to_f32(), data[index + 1].to_f32(), data[index + 2].to_f32()),
             _ => unimplemented!(),
-        }
+        };
+
+        exr_data[3 * i + 0] =
+            (gamma_correct(clamp_f32(data.0, 0.0, 1.0), 2.0) * 255.0) as u8;
+        exr_data[3 * i + 1] =
+            (gamma_correct(clamp_f32(data.1, 0.0, 1.0), 2.0) * 255.0) as u8;
+        exr_data[3 * i + 2] =
+            (gamma_correct(clamp_f32(data.2, 0.0, 1.0), 2.0) * 255.0) as u8;
     }
     exr_data
 }
