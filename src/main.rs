@@ -34,7 +34,8 @@ fn main() {
                     }
                 } else {
                     eprintln!("ERROR: Failed to read OpenEXR image. Please make sure it is a \
-                               valid image file.");
+                               valid image file. Currently. the PIZ, PXR24, B44*, and DWA* \
+                               compression formats are unsupported.");
                     std::process::exit(1);
                 }
             } else {
