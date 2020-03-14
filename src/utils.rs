@@ -21,12 +21,15 @@ pub fn extract_exr_data(image: &Image) -> Vec<u8> {
             }
 
             Pixels::F16(data) => {
-                exr_data[3 * i + 0] =
-                    (gamma_correct(clamp_f32(data[index + 0].to_f32(), 0.0, 1.0), 2.0) * 255.0) as u8;
-                exr_data[3 * i + 1] =
-                    (gamma_correct(clamp_f32(data[index + 1].to_f32(), 0.0, 1.0), 2.0) * 255.0) as u8;
-                exr_data[3 * i + 2] =
-                    (gamma_correct(clamp_f32(data[index + 2].to_f32(), 0.0, 1.0), 2.0) * 255.0) as u8;
+                exr_data[3 * i + 0] = (gamma_correct(clamp_f32(data[index + 0].to_f32(), 0.0, 1.0),
+                                                     2.0)
+                                       * 255.0) as u8;
+                exr_data[3 * i + 1] = (gamma_correct(clamp_f32(data[index + 1].to_f32(), 0.0, 1.0),
+                                                     2.0)
+                                       * 255.0) as u8;
+                exr_data[3 * i + 2] = (gamma_correct(clamp_f32(data[index + 2].to_f32(), 0.0, 1.0),
+                                                     2.0)
+                                       * 255.0) as u8;
             }
 
             _ => unimplemented!(),
