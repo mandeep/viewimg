@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.4.1] - 2020-03-14
+### Changed
+
+- Changed the OpenEXR error message to be more specific
+
+
 ## [0.4.0] - 2020-03-14
 ### Added
 - Add support for F16 and U32 OpenEXR images
