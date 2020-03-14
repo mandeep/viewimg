@@ -2,9 +2,15 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.4.0] - 2020-03-14
+### Added
+- Add support for F16 and U32 OpenEXR images
+
+
 ## [0.3.0] - 2020-03-10
 ### Added
-- Add support of OpenExr files via the `exr` crate
+- Add support of OpenEXR files via the `exr` crate
+
 
 ## [0.2.4] - 2020-01-27
 ### Fixed
