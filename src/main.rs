@@ -21,33 +21,38 @@ fn main() {
     if filepath.is_file() {
         if let Some(extension) = filepath.extension() {
             if extension == "exr" {
-                if let Ok(exr_image) = Image::read_from_file(filepath, read_options::high()) {
-                    let exr_data = extract_exr_data(&exr_image);
-                    let exr_image_buffer: ImageBuf<u8, Rgb> =
-                        ImageBuf::new_from(exr_image.resolution.0,
-                                           exr_image.resolution.1,
-                                           exr_data);
+                match Image::read_from_file(filepath, read_options::high()) {
+                    Ok(exr_image) => {
+                        let exr_data = extract_exr_data(&exr_image);
+                        let exr_image_buffer: ImageBuf<u8, Rgb> =
+                            ImageBuf::new_from(exr_image.resolution.0,
+                                               exr_image.resolution.1,
+                                               exr_data);
 
-                    if let Err(error) = render(exr_image_buffer, filepath) {
-                        eprintln!("{}", error);
-                        std::process::exit(1);
+                        if let Err(error) = render(exr_image_buffer, filepath) {
+                            eprintln!("{}", error);
+                            std::process::exit(1);
+                        }
                     }
-                } else {
-                    eprintln!("ERROR: Failed to read OpenEXR image. Please make sure it is a \
-                               valid image file. Currently. the PIZ, PXR24, B44*, and DWA* \
-                               compression formats are unsupported.");
-                    std::process::exit(1);
+
+                    Err(error) => {
+                        eprintln!("{:?}", error);
+                        std::process::exit(1);
+                    },
                 }
             } else {
-                if let Ok(hdr_image_buffer) = io::read(filepath) {
-                    if let Err(error) = render(hdr_image_buffer, filepath) {
+                match io::read(filepath) {
+                    Ok(hdr_image_buffer) => {
+                        if let Err(error) = render(hdr_image_buffer, filepath) {
+                            eprintln!("{}", error);
+                            std::process::exit(1);
+                        }
+                    }
+
+                    Err(error) => {
                         eprintln!("{}", error);
                         std::process::exit(1);
-                    }
-                } else {
-                    eprintln!("ERROR: Failed to read image. Please make sure it is a valid image \
-                               file.");
-                    std::process::exit(1);
+                    },
                 }
             }
         }
