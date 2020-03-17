@@ -1,15 +1,12 @@
 use std::env;
 use std::path::Path;
 
-use exr::image::read_options;
-use exr::image::rgba::Image;
-use image2::{io, ImageBuf, Rgb};
-
+mod reader;
 mod render;
 mod utils;
 
+use crate::reader::{read_exr_image, read_hdr_image};
 use crate::render::render;
-use crate::utils::extract_exr_data;
 
 fn main() {
     let file =
@@ -20,40 +17,14 @@ fn main() {
 
     if filepath.is_file() {
         if let Some(extension) = filepath.extension() {
-            if extension == "exr" {
-                match Image::read_from_file(filepath, read_options::high()) {
-                    Ok(exr_image) => {
-                        let exr_data = extract_exr_data(&exr_image);
-                        let exr_image_buffer: ImageBuf<u8, Rgb> =
-                            ImageBuf::new_from(exr_image.resolution.0,
-                                               exr_image.resolution.1,
-                                               exr_data);
+            let image_buffer = match extension.to_str().unwrap() {
+                "exr" => read_exr_image(filepath),
+                  _   => read_hdr_image(filepath),
+            };
 
-                        if let Err(error) = render(exr_image_buffer, filepath) {
-                            eprintln!("{}", error);
-                            std::process::exit(1);
-                        }
-                    }
-
-                    Err(error) => {
-                        eprintln!("{:?}", error);
-                        std::process::exit(1);
-                    },
-                }
-            } else {
-                match io::read(filepath) {
-                    Ok(hdr_image_buffer) => {
-                        if let Err(error) = render(hdr_image_buffer, filepath) {
-                            eprintln!("{}", error);
-                            std::process::exit(1);
-                        }
-                    }
-
-                    Err(error) => {
-                        eprintln!("{}", error);
-                        std::process::exit(1);
-                    },
-                }
+            if let Err(error) = render(image_buffer.unwrap(), filepath) {
+                eprintln!("{}", error);
+                std::process::exit(1);
             }
         }
     } else {
