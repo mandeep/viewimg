@@ -12,8 +12,9 @@ use winit_input_helper::WinitInputHelper;
 pub fn render(mut image: ImageBuf<u8, Rgb>, file: &Path) -> Result<(), Error> {
     let event_loop = EventLoop::new();
 
-    let (width, height, resize) = calculate_dimensions(&image, &event_loop);
-    if resize {
+    let (width, height) = calculate_dimensions(&image, &event_loop);
+
+    if width != image.width() as u32 || height != image.height() as u32 {
         image = resize_image(&image, width, height)
     };
 
@@ -42,11 +43,11 @@ pub fn render(mut image: ImageBuf<u8, Rgb>, file: &Path) -> Result<(), Error> {
               });
 }
 
-fn calculate_dimensions(image: &ImageBuf<u8, Rgb>, event_loop: &EventLoop<()>) -> (u32, u32, bool) {
+fn calculate_dimensions(image: &ImageBuf<u8, Rgb>, event_loop: &EventLoop<()>) -> (u32, u32) {
     if image.width() < event_loop.primary_monitor().size().width as usize
        && image.height() < event_loop.primary_monitor().size().height as usize
     {
-        (image.width() as u32, image.height() as u32, false)
+        (image.width() as u32, image.height() as u32)
     } else {
         let aspect_ratio = image.width() as f64 / image.height() as f64;
 
@@ -57,7 +58,7 @@ fn calculate_dimensions(image: &ImageBuf<u8, Rgb>, event_loop: &EventLoop<()>) -
                                           .min(event_loop.primary_monitor().size().height)
                                 as f64
                                 - 100.0;
-        ((minimum_dimension * aspect_ratio) as u32, minimum_dimension as u32, true)
+        ((minimum_dimension * aspect_ratio) as u32, minimum_dimension as u32)
     }
 }
 
