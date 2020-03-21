@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.4.2] - 2020-03-20
+### Fixed
+- Errors due to opening unsupported files now display properly to stderr
+
+
 ## [0.4.1] - 2020-03-14
 ### Changed
 
