@@ -18,23 +18,21 @@ fn main() {
     if filepath.is_file() {
         if let Some(extension) = filepath.extension() {
             let image_buffer = match extension.to_str().unwrap() {
-                "exr" => {
-                    match read_exr_image(filepath) {
-                        Ok(image) => image,
-                        Err(error) => {
-                            eprintln!("{:?}", error);
-                            std::process::exit(1);
-                        }
+                "exr" => match read_exr_image(filepath) {
+                    Ok(image) => image,
+                    Err(error) => {
+                        eprintln!("{:?}", error);
+                        std::process::exit(1);
                     }
-                }
+                },
 
-                  _   => match read_hdr_image(filepath) {
-                        Ok(image) => image,
-                        Err(error) => {
-                            eprintln!("{:?}", error);
-                            std::process::exit(1);
-                        }
-                  }
+                _ => match read_hdr_image(filepath) {
+                    Ok(image) => image,
+                    Err(error) => {
+                        eprintln!("{:?}", error);
+                        std::process::exit(1);
+                    }
+                },
             };
 
             if let Err(error) = render(image_buffer, filepath) {
