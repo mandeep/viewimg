@@ -1,5 +1,6 @@
-use std::env;
 use std::path::Path;
+
+use clap::{App, Arg};
 
 mod reader;
 mod render;
@@ -9,9 +10,17 @@ use crate::reader::{read_exr_image, read_hdr_image};
 use crate::render::render;
 
 fn main() {
-    let file =
-        env::args().skip(1).next().expect("ERROR: A filepath to an image must be provided as a \
-                                           commandline argument.");
+    let matches = App::new("viewimg")
+        .version("0.5.0")
+        .arg(
+                Arg::with_name("image")
+                    .help("The file path to the image to view")
+                    .index(1)
+                    .required(true)
+            )
+        .get_matches();
+
+    let file = matches.value_of("image").unwrap();
 
     let filepath = Path::new(&file);
 
