@@ -1283,7 +1283,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "viewimg"
-version = "0.4.2"
+version = "0.5.0"
 dependencies = [
  "clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "exr 0.7.2 (registry+https://github.com/rust-lang/crates.io-index)",
