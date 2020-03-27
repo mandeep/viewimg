@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.5.0] - 2020-03-27
+### Added
+- Use clap crate for command line argument parsing and usage menu
+
 ## [0.4.2] - 2020-03-20
 ### Fixed
 - Errors due to opening unsupported files now display properly to stderr
