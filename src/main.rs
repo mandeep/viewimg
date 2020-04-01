@@ -2,6 +2,7 @@ use std::path::Path;
 
 use clap::{App, Arg};
 
+mod macros;
 mod reader;
 mod render;
 mod utils;
@@ -29,28 +30,20 @@ fn main() {
             let image_buffer = match extension.to_str().unwrap() {
                 "exr" => match read_exr_image(filepath) {
                     Ok(image) => image,
-                    Err(error) => {
-                        eprintln!("{:?}", error);
-                        std::process::exit(1);
-                    }
+                    Err(error) => exit!("{:?}", error),
                 },
 
                 _ => match read_hdr_image(filepath) {
                     Ok(image) => image,
-                    Err(error) => {
-                        eprintln!("{:?}", error);
-                        std::process::exit(1);
-                    }
+                    Err(error) => exit!("{:?}", error),
                 },
             };
 
             if let Err(error) = render(image_buffer, filepath) {
-                eprintln!("{}", error);
-                std::process::exit(1);
+                exit!("{}", error);
             }
         }
     } else {
-        eprintln!("ERROR: Could not read path. Please provide a valid HDR image path.");
-        std::process::exit(1);
+        exit!("ERROR: Could not read path. Please provide a valid HDR image path.");
     }
 }
