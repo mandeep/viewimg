@@ -2,9 +2,15 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.5.1] - 2020-04-23
+### Fixed
+- Pinned OpenEXR library version to fix breakage
+
+
 ## [0.5.0] - 2020-03-27
 ### Added
 - Use clap crate for command line argument parsing and usage menu
+
 
 ## [0.4.2] - 2020-03-20
 ### Fixed
