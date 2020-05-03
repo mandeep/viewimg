@@ -23,19 +23,20 @@ pub fn extract_exr_data(image: &Image) -> Vec<u8> {
             }
         };
 
-        exr_data[3 * i + 0] = (gamma_correct(normalize_f32(data.0, minimum, maximum), 2.0) * 255.0) as u8;
-        exr_data[3 * i + 1] = (gamma_correct(normalize_f32(data.1, minimum, maximum), 2.0) * 255.0) as u8;
-        exr_data[3 * i + 2] = (gamma_correct(normalize_f32(data.2, minimum, maximum), 2.0) * 255.0) as u8;
+        exr_data[3 * i + 0] =
+            (gamma_correct(normalize_f32(data.0, minimum, maximum), 2.0) * 255.0) as u8;
+        exr_data[3 * i + 1] =
+            (gamma_correct(normalize_f32(data.1, minimum, maximum), 2.0) * 255.0) as u8;
+        exr_data[3 * i + 2] =
+            (gamma_correct(normalize_f32(data.2, minimum, maximum), 2.0) * 255.0) as u8;
     }
     exr_data
 }
 
 pub fn find_min_max(image: &Image) -> (f32, f32) {
     let min_max = match &image.data {
-        Pixels::F32(data) => {
-            (data.iter().cloned().fold(0.0 / 0.0, f32::min),
-             data.iter().cloned().fold(0.0 / 0.0, f32::max))
-        },
+        Pixels::F32(data) => (data.iter().cloned().fold(0.0 / 0.0, f32::min),
+                              data.iter().cloned().fold(0.0 / 0.0, f32::max)),
         Pixels::F16(data) => {
             let mut minimum = f16::MAX;
             let mut maximum = f16::MIN;
@@ -49,7 +50,7 @@ pub fn find_min_max(image: &Image) -> (f32, f32) {
             }
 
             (minimum.to_f32(), maximum.to_f32())
-        },
+        }
         Pixels::U32(data) => {
             ((*data.iter().min().unwrap()) as f32, (*data.iter().max().unwrap()) as f32)
         }
