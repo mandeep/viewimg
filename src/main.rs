@@ -11,15 +11,12 @@ use crate::reader::{read_exr_image, read_hdr_image};
 use crate::render::render;
 
 fn main() {
-    let matches = App::new("viewimg")
-        .version("0.5.0")
-        .arg(
-                Arg::with_name("image")
-                    .help("The file path to the image to view")
-                    .index(1)
-                    .required(true)
-            )
-        .get_matches();
+    let matches =
+        App::new("viewimg").version("0.5.0")
+                           .arg(Arg::with_name("image").help("The file path to the image to view")
+                                                       .index(1)
+                                                       .required(true))
+                           .get_matches();
 
     let file = matches.value_of("image").unwrap();
 
