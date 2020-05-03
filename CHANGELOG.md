@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.6.0] - 2020-05-03
+### Changed
+- OpenEXR values are now normalized between [0.0, 1.0] instead of clamped
+
+
 ## [0.5.1] - 2020-04-23
 ### Fixed
 - Pinned OpenEXR library version to fix breakage
