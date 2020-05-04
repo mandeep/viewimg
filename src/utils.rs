@@ -70,6 +70,13 @@ pub fn clamp_f32(value: f32, lower_bound: f32, upper_bound: f32) -> f32 {
     minimum.min(maximum)
 }
 
-pub fn clamp_rgb(value: f32) -> f32 { value.min(255.0).max(0.0) }
+pub fn clamp_rgb(value: f32) -> f32 {
+    value.min(255.0).max(0.0)
+}
+
+pub fn gamma_correct(luminance: f32, gamma: f32) -> f32 {
+    luminance.powf(1.0 / gamma)
+}
+
 
 pub fn gamma_correct(luminance: f32, gamma: f32) -> f32 { luminance.powf(1.0 / gamma) }
