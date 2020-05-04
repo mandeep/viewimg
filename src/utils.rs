@@ -78,5 +78,20 @@ pub fn gamma_correct(luminance: f32, gamma: f32) -> f32 {
     luminance.powf(1.0 / gamma)
 }
 
+pub fn knee(value: f32, f: f32) -> f32 {
+    (value * f + 1.0).ln() / f
+}
 
-pub fn gamma_correct(luminance: f32, gamma: f32) -> f32 { luminance.powf(1.0 / gamma) }
+
+pub fn compensate(value: f32) -> u8 {
+    let mut compensated_value = 0.0f32.max(value);
+
+    compensated_value *= 2.0f32.powf(2.47393);
+
+    // this f value originates from a low of 0.0 and a high of 5.0
+    compensated_value = knee(compensated_value, 0.16022483);
+
+    compensated_value = gamma_correct(compensated_value, 2.2);
+
+    clamp_rgb(255.0 * compensated_value * 2.0f32.powf(-3.5 / 2.2)) as u8
+}
