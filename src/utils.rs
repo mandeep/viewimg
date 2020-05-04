@@ -6,8 +6,6 @@ pub fn extract_exr_data(image: &Image) -> Vec<u8> {
 
     let mut exr_data = vec![0u8; width as usize * height as usize * 3];
 
-    let (minimum, maximum) = find_min_max(image);
-
     for i in 0..(width * height) {
         let x = i % width as usize;
         let y = i / width as usize;
@@ -23,12 +21,9 @@ pub fn extract_exr_data(image: &Image) -> Vec<u8> {
             }
         };
 
-        exr_data[3 * i + 0] =
-            (gamma_correct(normalize_f32(data.0, minimum, maximum), 2.0) * 255.0) as u8;
-        exr_data[3 * i + 1] =
-            (gamma_correct(normalize_f32(data.1, minimum, maximum), 2.0) * 255.0) as u8;
-        exr_data[3 * i + 2] =
-            (gamma_correct(normalize_f32(data.2, minimum, maximum), 2.0) * 255.0) as u8;
+        exr_data[3 * i + 0] = compensate(data.0);
+        exr_data[3 * i + 1] = compensate(data.1);
+        exr_data[3 * i + 2] = compensate(data.2);
     }
     exr_data
 }
