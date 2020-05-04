@@ -46,6 +46,7 @@ pub fn gamma_correct(luminance: f32, gamma: f32) -> f32 {
     luminance.powf(1.0 / gamma)
 }
 
+/// Reference: https://www.openexr.com/using.html
 pub fn compensate(value: f32) -> u8 {
     let mut compensated_value = 0.0f32.max(value);
 
