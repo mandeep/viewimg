@@ -8,8 +8,7 @@ seeing the image contents. There is no editing component to this application,
 therefore tone mapping and other HDR editing operators are not supported.
 The typical use case of viewimg would be to view HDR images immediately after rendering.
 
-For both OpenEXR and Radiance HDR images, the f32 values are normalized in the [0.0, 1.0] interval
-before casting to u8. In the case of OpenEXR images, gamma correction of 2.0 is also applied.
+For both OpenEXR and Radiance HDR images, the f32 values are intensity corrected prior to casting to u8. In the case of OpenEXR images, gamma correction of 2.0 is also applied.
 
 
 
