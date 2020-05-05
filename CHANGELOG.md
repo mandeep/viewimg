@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.7.0] - 2020-05-04
+### Changed
+- OpenEXR values are intensity and gamma corrected prior to clamping on the [0, 255] interval
+
+
 ## [0.6.0] - 2020-05-03
 ### Changed
 - OpenEXR values are now normalized between [0.0, 1.0] instead of clamped
