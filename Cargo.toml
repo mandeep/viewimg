@@ -1,6 +1,6 @@
 [package]
 name = "viewimg"
-version = "0.7.0"
+version = "0.8.0"
 authors = ["mandeep <mandeep@users.noreply.github.com>"]
 license = "MIT"
 edition = "2018"
