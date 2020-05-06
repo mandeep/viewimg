@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.8.0] - 2020-05-06
+### Added
+- Iterate over large exr buffers in parallel
+
+### Fixed
+- Fix contrast being too muddled after intensity correction
+
+
 ## [0.7.0] - 2020-05-04
 ### Changed
 - OpenEXR values are intensity and gamma corrected prior to clamping on the [0, 255] interval

@@ -54,5 +54,5 @@ pub fn compensate(value: f32) -> u8 {
     compensated_value = (compensated_value * 0.16 + 1.0).ln() / 0.16;
     compensated_value = gamma_correct(compensated_value, 2.2);
 
-    clamp_rgb(255.0 * compensated_value * 2.0f32.powf(-3.5 / 2.2)) as u8
+    clamp_rgb(255.0 * compensated_value * 2.0f32.powf(-1.0)) as u8
 }

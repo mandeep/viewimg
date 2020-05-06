@@ -3,6 +3,7 @@ use std::path::Path;
 use exr::image::read_options;
 use exr::image::rgba::{Image, Pixels};
 use image2::{io, ImageBuf, Rgb};
+use rayon::prelude::*;
 
 use crate::utils::compensate;
 
@@ -11,7 +12,7 @@ fn extract_exr_data(image: &Image) -> Vec<u8> {
 
     let mut exr_data = vec![0u8; width as usize * height as usize * 3];
 
-    for i in 0..(width * height) {
+    exr_data.par_chunks_mut(3).enumerate().for_each(|(i, pixel)| {
         let x = i % width as usize;
         let y = i / width as usize;
         let index = image.vector_index_of_first_pixel_component(exr::math::Vec2(x, y));
@@ -26,10 +27,11 @@ fn extract_exr_data(image: &Image) -> Vec<u8> {
             }
         };
 
-        exr_data[3 * i + 0] = compensate(data.0);
-        exr_data[3 * i + 1] = compensate(data.1);
-        exr_data[3 * i + 2] = compensate(data.2);
-    }
+        pixel[0] = compensate(data.0);
+        pixel[1] = compensate(data.1);
+        pixel[2] = compensate(data.2);
+    });
+
     exr_data
 }
 
