@@ -14,5 +14,6 @@ before_install:
     - sudo apt-get install xorg-dev libglu1-mesa-dev
 
 script:
+  - if [[ "$TRAVIS_RUST_VERSION" == *stable* ]]; then rustup component add rustfmt; cargo fmt --version; cargo fmt -- --check || (echo "Please reformat your code with 'cargo fmt' (version $(cargo fmt --version))"; false); fi
   - cargo build --release --verbose --all
   - cargo test --verbose --all
