@@ -9,10 +9,16 @@ use winit::event_loop::{ControlFlow, EventLoop};
 use winit::window::{Window, WindowBuilder};
 use winit_input_helper::WinitInputHelper;
 
+use crate::exit;
+
 pub fn render(mut image: ImageBuf<u8, Rgb>, file: &Path) -> Result<(), Error> {
     let event_loop = EventLoop::new();
 
     let (width, height) = calculate_dimensions(&image, &event_loop);
+
+    if width == 0 || height == 0 {
+        exit!("Failed to get image dimensions");
+    }
 
     if width != image.width() as u32 || height != image.height() as u32 {
         image = resize_image(&image, width, height)
@@ -28,7 +34,7 @@ pub fn render(mut image: ImageBuf<u8, Rgb>, file: &Path) -> Result<(), Error> {
                       pixels.render();
                   }
                   _ => {
-                      if input.update(event) {
+                      if input.update(&event) {
                           if input.key_pressed(VirtualKeyCode::Escape) || input.quit() {
                               *control_flow = ControlFlow::Exit;
                           }
@@ -44,8 +50,8 @@ pub fn render(mut image: ImageBuf<u8, Rgb>, file: &Path) -> Result<(), Error> {
 }
 
 fn calculate_dimensions(image: &ImageBuf<u8, Rgb>, event_loop: &EventLoop<()>) -> (u32, u32) {
-    if image.width() < event_loop.primary_monitor().size().width as usize
-       && image.height() < event_loop.primary_monitor().size().height as usize
+    if image.width() < event_loop.primary_monitor().unwrap().size().width as usize
+       && image.height() < event_loop.primary_monitor().unwrap().size().height as usize
     {
         (image.width() as u32, image.height() as u32)
     } else {
@@ -53,9 +59,10 @@ fn calculate_dimensions(image: &ImageBuf<u8, Rgb>, event_loop: &EventLoop<()>) -
 
         // subtract 100 pixels from the minimum dimension to account for window border
         let minimum_dimension = event_loop.primary_monitor()
+                                          .unwrap()
                                           .size()
                                           .width
-                                          .min(event_loop.primary_monitor().size().height)
+                                          .min(event_loop.primary_monitor().unwrap().size().height)
                                 as f64
                                 - 125.0;
         ((minimum_dimension * aspect_ratio) as u32, minimum_dimension as u32)
@@ -79,6 +86,7 @@ fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Pat
                                      .with_inner_size(size)
                                      .with_min_inner_size(size)
                                      .with_max_inner_size(event_loop.primary_monitor()
+                                                                    .unwrap()
                                                                     .size()
                                                                     .to_logical::<f64>(1.0))
                                      .with_resizable(true)

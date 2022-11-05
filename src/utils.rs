@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 use exr::image::rgba::{Image, Pixels};
 use exr::prelude::f16;
 
