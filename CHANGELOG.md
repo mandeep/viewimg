@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.8.1] - 2022-11-15
+### Changed
+- Updated winit dependencies in order to fix a window crash (thanks @ctrlcctrlv)
+
 
 ## [0.8.0] - 2020-05-06
 ### Added
