@@ -26,4 +26,4 @@ debug = true
 [profile.release]
 lto = true
 
-exclude = ["tests/"]
+exclude = ["*.exr"]
