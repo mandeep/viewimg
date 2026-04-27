@@ -5,10 +5,20 @@ use pixels::{Error, Pixels, SurfaceTexture};
 use winit::dpi::LogicalSize;
 use winit::event::{Event, VirtualKeyCode};
 use winit::event_loop::{ControlFlow, EventLoop};
-use winit::window::{Window, WindowBuilder};
+use winit::window::{Icon, Window, WindowBuilder};
 use winit_input_helper::WinitInputHelper;
 
 use crate::exit;
+
+const ICON_BYTES: &[u8] = include_bytes!("../assets/icon.png");
+
+fn load_icon() -> Icon {
+    let img = image::load_from_memory(ICON_BYTES).unwrap().into_rgba8();
+    let (width, height) = img.dimensions();
+
+    Icon::from_rgba(img.into_raw(), width, height)
+        .expect("Failed to create icon.")
+}
 
 pub fn render(mut image: ImageBuf<u8, Rgb>, file: &Path) -> Result<(), Error> {
     let event_loop = EventLoop::new();
@@ -87,7 +97,11 @@ fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Pat
     let filename =
         file.file_name().unwrap_or(std::ffi::OsStr::new("viewimg")).to_str().unwrap_or("viewimg");
 
+    let window_icon = load_icon();
+
+
     let window = WindowBuilder::new().with_title(filename)
+                                     .with_window_icon(Some(window_icon))
                                      .with_inner_size(size)
                                      .with_min_inner_size(size)
                                      .with_max_inner_size(event_loop.primary_monitor()
