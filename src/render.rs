@@ -127,7 +127,6 @@ fn resize_pixels(pixels: &mut Pixels, size: LogicalSize<f64>) {
         return;
     }
 
-    pixels.resize_surface(new_width, new_height);
     if let Err(err) = pixels.resize_surface(new_width, new_height) {
         exit!("{}", err);
     }
