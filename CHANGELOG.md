@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.13.0] - 2026-04-26
+- Add window icon
+
+## [0.12.0] - 2026-04-26
+- Fix issue where minimizing window caused the program to crash
+
 ## [0.11.0] - 2026-04-21
 - Exclude test images from published crate to reduce crate size
 - Handle errors when pixel buffer is unable to render and resize
