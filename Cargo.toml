@@ -1,6 +1,6 @@
 [package]
 name = "viewimg"
-version = "0.12.0"
+version = "0.13.0"
 authors = ["mandeep <mandeep@users.noreply.github.com>"]
 license = "MIT"
 edition = "2021"
@@ -14,6 +14,7 @@ exclude = ["tests/"]
 [dependencies]
 clap = "2.33"
 exr = "1.72.0"
+image = "0.25.10"
 image2 = "0.11.3"
 pixels = "0.13.0"
 winit = "0.27"
