@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use clap::{App, Arg};
+use clap::{App, Arg, crate_version};
 
 mod macros;
 mod reader;
@@ -12,7 +12,7 @@ use crate::render::render;
 
 fn main() {
     let matches =
-        App::new("viewimg").version("0.13.0")
+        App::new("viewimg").version(crate_version!())
                            .arg(Arg::with_name("image").help("The file path to the image to view")
                                                        .index(1)
                                                        .required(true))
