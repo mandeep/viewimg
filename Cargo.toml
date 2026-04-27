@@ -9,6 +9,7 @@ homepage = "https://github.com/mandeep/viewimg"
 repository = "https://github.com/mandeep/viewimg"
 documentation = "https://github.com/mandeep/viewimg"
 readme = "README.md"
+exclude = ["tests/"]
 
 [dependencies]
 clap = "2.33"

@@ -26,7 +26,7 @@ Usage
 To use viewimg you can run `viewimg` in a terminal with the path to the
 image file that you wish to open:
 
-    $  viewimg ../cornell_box_denoised.hdr
+    $  viewimg tests/WideColorGamut.exr
 
 Screenshot
 ==========

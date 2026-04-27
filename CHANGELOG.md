@@ -1,6 +1,22 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.11.0] - 2026-04-21
+- Exclude test images from published crate to reduce crate size
+- Handle errors when pixel buffer is unable to render and resize
+
+
+## [0.10.0] - 2024-04-24
+- Updated pixels dependency
+- Change screenshot to show test
+
+
+## [0.9.0] - 2024-04-24
+### Changed
+- Updated exr dependency
+- Add more test images
+
+
 ## [0.8.1] - 2022-11-15
 ### Changed
 - Updated winit dependencies in order to fix a window crash (thanks @ctrlcctrlv)

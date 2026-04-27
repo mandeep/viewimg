@@ -30,7 +30,9 @@ pub fn render(mut image: ImageBuf<u8, Rgb>, file: &Path) -> Result<(), Error> {
     event_loop.run(move |event, _, control_flow| match event {
                   Event::RedrawRequested(_) => {
                       draw_pixels(pixels.frame_mut(), &image);
-                      pixels.render();
+                      if let Err(err) = pixels.render() {
+                        exit!("{}", err);
+                      }
                   }
                   _ => {
                       if input.update(&event) {
@@ -126,4 +128,7 @@ fn resize_pixels(pixels: &mut Pixels, size: LogicalSize<f64>) {
     }
 
     pixels.resize_surface(new_width, new_height);
+    if let Err(err) = pixels.resize_surface(new_width, new_height) {
+        exit!("{}", err);
+    }
 }
