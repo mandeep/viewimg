@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use clap::{App, Arg, crate_version};
+use clap::{crate_version, App, Arg};
 
 mod macros;
 mod reader;
@@ -11,12 +11,15 @@ use crate::reader::{read_exr_image, read_hdr_image};
 use crate::render::render;
 
 fn main() {
-    let matches =
-        App::new("viewimg").version(crate_version!())
-                           .arg(Arg::with_name("image").help("The file path to the image to view")
-                                                       .index(1)
-                                                       .required(true))
-                           .get_matches();
+    let matches = App::new("viewimg")
+        .version(crate_version!())
+        .arg(
+            Arg::with_name("image")
+                .help("The file path to the image to view")
+                .index(1)
+                .required(true),
+        )
+        .get_matches();
 
     let file = matches.value_of("image").unwrap();
 

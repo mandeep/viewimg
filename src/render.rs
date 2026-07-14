@@ -16,8 +16,7 @@ fn load_icon() -> Icon {
     let img = image::load_from_memory(ICON_BYTES).unwrap().into_rgba8();
     let (width, height) = img.dimensions();
 
-    Icon::from_rgba(img.into_raw(), width, height)
-        .expect("Failed to create icon.")
+    Icon::from_rgba(img.into_raw(), width, height).expect("Failed to create icon.")
 }
 
 pub fn render(mut image: ImageBuf<u8, Rgb>, file: &Path) -> Result<(), Error> {
@@ -38,48 +37,49 @@ pub fn render(mut image: ImageBuf<u8, Rgb>, file: &Path) -> Result<(), Error> {
     let mut input = WinitInputHelper::new();
 
     event_loop.run(move |event, _, control_flow| match event {
-                  Event::RedrawRequested(_) => {
-                      draw_pixels(pixels.frame_mut(), &image);
-                      if let Err(err) = pixels.render() {
-                        exit!("{}", err);
-                      }
-                  }
-                  _ => {
-                      if input.update(&event) {
-                          if input.key_pressed(VirtualKeyCode::Escape) || input.quit() {
-                              *control_flow = ControlFlow::Exit;
-                          }
+        Event::RedrawRequested(_) => {
+            draw_pixels(pixels.frame_mut(), &image);
+            if let Err(err) = pixels.render() {
+                exit!("{}", err);
+            }
+        }
+        _ => {
+            if input.update(&event) {
+                if input.key_pressed(VirtualKeyCode::Escape) || input.quit() {
+                    *control_flow = ControlFlow::Exit;
+                }
 
-                          if let Some(size) = input.window_resized() {
-                              if size.width == 0 || size.height == 0 {
-                                  // window is minimized no need to resize
-                                  return;
-                              }
-                              resize_pixels(&mut pixels, size.to_logical(1.0));
-                          }
+                if let Some(size) = input.window_resized() {
+                    if size.width == 0 || size.height == 0 {
+                        // window is minimized no need to resize
+                        return;
+                    }
+                    resize_pixels(&mut pixels, size.to_logical(1.0));
+                }
 
-                          window.request_redraw();
-                      }
-                  }
-              });
+                window.request_redraw();
+            }
+        }
+    });
 }
 
 fn calculate_dimensions(image: &ImageBuf<u8, Rgb>, event_loop: &EventLoop<()>) -> (u32, u32) {
     if image.width() < event_loop.primary_monitor().unwrap().size().width as usize
-       && image.height() < event_loop.primary_monitor().unwrap().size().height as usize
+        && image.height() < event_loop.primary_monitor().unwrap().size().height as usize
     {
         (image.width() as u32, image.height() as u32)
     } else {
         let aspect_ratio = image.width() as f64 / image.height() as f64;
 
         // subtract 100 pixels from the minimum dimension to account for window border
-        let minimum_dimension = event_loop.primary_monitor()
-                                          .unwrap()
-                                          .size()
-                                          .width
-                                          .min(event_loop.primary_monitor().unwrap().size().height)
-                                as f64
-                                - 125.0;
+        let minimum_dimension = event_loop
+            .primary_monitor()
+            .unwrap()
+            .size()
+            .width
+            .min(event_loop.primary_monitor().unwrap().size().height)
+            as f64
+            - 125.0;
         ((minimum_dimension * aspect_ratio) as u32, minimum_dimension as u32)
     }
 }
@@ -99,18 +99,15 @@ fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Pat
 
     let window_icon = load_icon();
 
-
-    let window = WindowBuilder::new().with_title(filename)
-                                     .with_window_icon(Some(window_icon))
-                                     .with_inner_size(size)
-                                     .with_min_inner_size(size)
-                                     .with_max_inner_size(event_loop.primary_monitor()
-                                                                    .unwrap()
-                                                                    .size()
-                                                                    .to_logical::<f64>(1.0))
-                                     .with_resizable(true)
-                                     .build(&event_loop)
-                                     .unwrap();
+    let window = WindowBuilder::new()
+        .with_title(filename)
+        .with_window_icon(Some(window_icon))
+        .with_inner_size(size)
+        .with_min_inner_size(size)
+        .with_max_inner_size(event_loop.primary_monitor().unwrap().size().to_logical::<f64>(1.0))
+        .with_resizable(true)
+        .build(&event_loop)
+        .unwrap();
 
     window
 }
@@ -129,7 +126,6 @@ fn draw_pixels(frame: &mut [u8], image: &ImageBuf<u8, Rgb>) {
         let rgba = [image.get(x, y, 0), image.get(x, y, 1), image.get(x, y, 2), 255];
         pixel.copy_from_slice(&rgba);
     }
-    
 }
 
 fn resize_pixels(pixels: &mut Pixels, size: LogicalSize<f64>) {

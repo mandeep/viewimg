@@ -1,9 +1,9 @@
 use std::path::Path;
 
+use exr::image::RgbChannels;
+use exr::prelude::{ReadChannels, ReadLayers};
 use image2::Image;
 use image2::{io, ImageBuf, Rgb};
-use exr::image::RgbChannels;
-use exr::prelude::{ReadLayers, ReadChannels};
 
 use crate::utils::compensate;
 
@@ -11,7 +11,6 @@ use crate::utils::compensate;
 //     let (width, height) = (image.layer_data.size.0, image.layer_data.size.1);
 
 //     let mut exr_data = vec![0u8; width as usize * height as usize * 3];
-
 
 //     exr_data.par_chunks_mut(3).enumerate().for_each(|(i, pixel)| {
 //         let x = i % width as usize;
@@ -27,33 +26,26 @@ use crate::utils::compensate;
 //     exr_data
 // }
 
-
 pub fn read_exr_image(filepath: &Path) -> Result<ImageBuf<u8, Rgb>, exr::error::Error> {
     let reader = exr::image::read::read()
-    .no_deep_data()
-    .largest_resolution_level()
-    .rgb_channels(
-        |resolution, _channels: &RgbChannels| -> ImageBuf<u8, Rgb> {
-                ImageBuf::new(
-                    resolution.width(),
-                    resolution.height()
-                )
+        .no_deep_data()
+        .largest_resolution_level()
+        .rgb_channels(
+            |resolution, _channels: &RgbChannels| -> ImageBuf<u8, Rgb> {
+                ImageBuf::new(resolution.width(), resolution.height())
             },
-
             // set each pixel in the png buffer from the exr file
             |png_pixels, position, (r, g, b): (f32, f32, f32)| {
                 png_pixels.set(position.x(), position.y(), 0, compensate(r));
                 png_pixels.set(position.x(), position.y(), 1, compensate(g));
                 png_pixels.set(position.x(), position.y(), 2, compensate(b));
-            }
-    )
-    .first_valid_layer()
-    .all_attributes();
+            },
+        )
+        .first_valid_layer()
+        .all_attributes();
 
     match reader.from_file(filepath) {
-        Ok(image) => {
-            Ok(image.layer_data.channel_data.pixels)
-        },
+        Ok(image) => Ok(image.layer_data.channel_data.pixels),
         Err(error) => Err(error),
     }
 }
