@@ -5,6 +5,8 @@ use image2::{io, ImageBuf, Rgb};
 use exr::image::RgbChannels;
 use exr::prelude::{ReadLayers, ReadChannels};
 
+use crate::utils::compensate;
+
 // fn extract_exr_data(image: &Image<Layer<SpecificChannels<RgbaImage, RgbaChannels>>>) -> Vec<u8> {
 //     let (width, height) = (image.layer_data.size.0, image.layer_data.size.1);
 
@@ -31,19 +33,19 @@ pub fn read_exr_image(filepath: &Path) -> Result<ImageBuf<u8, Rgb>, exr::error::
     .no_deep_data()
     .largest_resolution_level()
     .rgb_channels(
-    |resolution, _channels: &RgbChannels| -> ImageBuf<u8, Rgb> {
-            ImageBuf::new(
-                resolution.width(),
-                resolution.height()
-            )
-        },
+        |resolution, _channels: &RgbChannels| -> ImageBuf<u8, Rgb> {
+                ImageBuf::new(
+                    resolution.width(),
+                    resolution.height()
+                )
+            },
 
-        // set each pixel in the png buffer from the exr file
-        |png_pixels, position, (r, g, b): (f32, f32, f32)| { 
-            png_pixels.set_f(position.x(), position.y(), 0, r.into());
-            png_pixels.set_f(position.x(), position.y(), 1, g.into());
-            png_pixels.set_f(position.x(), position.y(), 2, b.into());
-        }
+            // set each pixel in the png buffer from the exr file
+            |png_pixels, position, (r, g, b): (f32, f32, f32)| {
+                png_pixels.set(position.x(), position.y(), 0, compensate(r));
+                png_pixels.set(position.x(), position.y(), 1, compensate(g));
+                png_pixels.set(position.x(), position.y(), 2, compensate(b));
+            }
     )
     .first_valid_layer()
     .all_attributes();
@@ -53,7 +55,6 @@ pub fn read_exr_image(filepath: &Path) -> Result<ImageBuf<u8, Rgb>, exr::error::
             Ok(image.layer_data.channel_data.pixels)
         },
         Err(error) => Err(error),
-
     }
 }
 
@@ -64,4 +65,3 @@ pub fn read_hdr_image(filepath: &Path) -> Result<ImageBuf<u8, Rgb>, image2::Erro
         Err(error) => Err(error),
     }
 }
-
