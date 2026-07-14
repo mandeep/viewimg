@@ -2,7 +2,7 @@ use std::path::Path;
 
 use image2::{transform, Image, ImageBuf, Rgb};
 use pixels::{Error, Pixels, SurfaceTexture};
-use winit::dpi::LogicalSize;
+use winit::dpi::PhysicalSize;
 use winit::event::{Event, VirtualKeyCode};
 use winit::event_loop::{ControlFlow, EventLoop};
 use winit::window::{Icon, Window, WindowBuilder};
@@ -50,11 +50,15 @@ pub fn render(mut image: ImageBuf<u8, Rgb>, file: &Path) -> Result<(), Error> {
                 }
 
                 if let Some(size) = input.window_resized() {
-                    if size.width == 0 || size.height == 0 {
-                        // window is minimized no need to resize
-                        return;
+                    if size.width > 0 && size.height > 0 {
+                        resize_pixels(&mut pixels, size);
                     }
-                    resize_pixels(&mut pixels, size.to_logical(1.0));
+                }
+
+                if input.mouse_pressed(0) {
+                    if let Err(error) = window.drag_window() {
+                        eprintln!("Failed to drag window: {error}");
+                    }
                 }
 
                 window.request_redraw();
@@ -79,7 +83,7 @@ fn calculate_dimensions(image: &ImageBuf<u8, Rgb>, event_loop: &EventLoop<()>) -
             .width
             .min(event_loop.primary_monitor().unwrap().size().height)
             as f64
-            - 125.0;
+            - 100.0;
         ((minimum_dimension * aspect_ratio) as u32, minimum_dimension as u32)
     }
 }
@@ -92,7 +96,7 @@ fn resize_image(image: &ImageBuf<u8, Rgb>, width: u32, height: u32) -> ImageBuf<
 }
 
 fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Path) -> Window {
-    let size = LogicalSize::new(width as f64, height as f64);
+    let size = PhysicalSize::new(width, height);
 
     let filename =
         file.file_name().unwrap_or(std::ffi::OsStr::new("viewimg")).to_str().unwrap_or("viewimg");
@@ -103,9 +107,8 @@ fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Pat
         .with_title(filename)
         .with_window_icon(Some(window_icon))
         .with_inner_size(size)
-        .with_min_inner_size(size)
-        .with_max_inner_size(event_loop.primary_monitor().unwrap().size().to_logical::<f64>(1.0))
         .with_resizable(true)
+        .with_decorations(false)
         .build(&event_loop)
         .unwrap();
 
@@ -113,7 +116,8 @@ fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Pat
 }
 
 fn create_pixel_buffer(window: &Window, width: u32, height: u32) -> Pixels {
-    let surface_texture = SurfaceTexture::new(width, height, window);
+    let surface_size = window.inner_size();
+    let surface_texture = SurfaceTexture::new(surface_size.width, surface_size.height, window);
     Pixels::new(width, height, surface_texture).unwrap()
 }
 
@@ -128,16 +132,11 @@ fn draw_pixels(frame: &mut [u8], image: &ImageBuf<u8, Rgb>) {
     }
 }
 
-fn resize_pixels(pixels: &mut Pixels, size: LogicalSize<f64>) {
-    let new_width = size.width.round() as u32;
-    let new_height = size.height.round() as u32;
-
-    if new_width == 0 || new_height == 0 {
-        // window is minimized, no need to resize
-        return;
-    }
-
-    if let Err(err) = pixels.resize_surface(new_width, new_height) {
-        exit!("{}", err);
+fn resize_pixels(pixels: &mut Pixels, size: PhysicalSize<u32>) {
+    // check that window is not minimized otherwise program crashes
+    if size.width > 0 && size.height > 0 {
+        if let Err(err) = pixels.resize_surface(size.width, size.height) {
+            exit!("{}", err);
+        }
     }
 }
