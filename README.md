@@ -28,7 +28,7 @@ image file that you wish to open:
 
     $  viewimg tests/WideColorGamut.exr
 
-Screenshot
-==========
+To close the viewimg windows, one can press the Esc key. Left Mouse Button click and hold
+can be used to drag the window around the display.
 
 ![screenshot](screenshot.png "viewimg window screenshot")
