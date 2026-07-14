@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+
+## [0.14.0] - 2026-07-14
+- Fix issue where images weren't being scaled properly on hi-DPI displays
+- Remove window decorations. Now Esc and Left Mouse click perform actions
+
+## [0.13.2] - 2026-07-14
+- Fix issue where compensate function was not being called on EXR image buffers
+
+## [0.13.1] - 2026-04-27
+- Retrieve version from Cargo.toml so that CLI --version output is always up to date
+
 ## [0.13.0] - 2026-04-26
 - Add window icon
 
