@@ -1,6 +1,8 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.15.0] - 2026-07-15
+- Add Q as a key to quit the application
 
 ## [0.14.0] - 2026-07-14
 - Fix issue where images weren't being scaled properly on hi-DPI displays
