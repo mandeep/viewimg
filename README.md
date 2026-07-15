@@ -5,10 +5,13 @@ viewimg is an image viewer intended to be used with OpenEXR and Radiance HDR ima
 other popular image formats are supported as well. The goal of viewimg is to be a cross-platform
 image viewer that quickly opens OpenEXR and Radiance HDR images with the purpose of instantly
 seeing the image contents. There is no editing component to this application,
-therefore tone mapping and other HDR editing operators are not supported.
-The typical use case of viewimg would be to view HDR images immediately after rendering.
+therefore tone mapping and other editing operators are not supported.
 
-For both OpenEXR and Radiance HDR images, the f32 values are intensity corrected prior to casting to u8. In the case of OpenEXR images, gamma correction of 2.0 is also applied.
+The typical use case of viewimg would be to view f32 images immediately after rendering.
+
+Luminance correction is applied to both OpenEXR and Radiance HDR images. OpenEXR images
+are corrected using the same compensation as [exrdisplay](https://lists.aswf.io/g/openexr-dev/messages?page=235&after=1078387999000000000&subsort=1) whereas Radiance HDR images are gamma corrected
+using a gamma of 2.2.
 
 
 
