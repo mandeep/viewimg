@@ -1,5 +1,22 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+- Add command line flag that disables scaling of images prior to displaying in window
+- Correctly measure usable workspace across platforms rather than using arbitrary taskbar size
+
+## [0.16.0] - 2026-07-15
+- Replace deprecated image2 crate with image crate
+- Remove unneeded dependencies for faster compile times
+- Remove ability to resize images in render window
+- Fix issue where images were not being correctly scaled to fit the display
+- Show new window in the center of the display
+- Print to stdout whenever an image is resized
+- Fix redraws occurring in the window when a redraw is not needed
 
 ## [0.15.0] - 2026-07-15
 - Add Q as a key to quit the application
