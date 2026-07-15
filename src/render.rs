@@ -45,7 +45,10 @@ pub fn render(mut image: ImageBuf<u8, Rgb>, file: &Path) -> Result<(), Error> {
         }
         _ => {
             if input.update(&event) {
-                if input.key_pressed(VirtualKeyCode::Escape) || input.quit() {
+                if input.key_pressed(VirtualKeyCode::Escape)
+                    || input.key_pressed(VirtualKeyCode::Q)
+                    || input.quit()
+                {
                     *control_flow = ControlFlow::Exit;
                 }
 
@@ -84,6 +87,7 @@ fn calculate_dimensions(image: &ImageBuf<u8, Rgb>, event_loop: &EventLoop<()>) -
             .min(event_loop.primary_monitor().unwrap().size().height)
             as f64
             - 100.0;
+
         ((minimum_dimension * aspect_ratio) as u32, minimum_dimension as u32)
     }
 }
@@ -98,8 +102,11 @@ fn resize_image(image: &ImageBuf<u8, Rgb>, width: u32, height: u32) -> ImageBuf<
 fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Path) -> Window {
     let size = PhysicalSize::new(width, height);
 
-    let filename =
-        file.file_name().unwrap_or(std::ffi::OsStr::new("viewimg")).to_str().unwrap_or("viewimg");
+    let filename = file
+        .file_name()
+        .unwrap_or(std::ffi::OsStr::new("viewimg"))
+        .to_str()
+        .unwrap_or("viewimg");
 
     let window_icon = load_icon();
 
@@ -127,7 +134,12 @@ fn draw_pixels(frame: &mut [u8], image: &ImageBuf<u8, Rgb>) {
     for (i, pixel) in frame.chunks_exact_mut(4).enumerate() {
         let x = i % width as usize;
         let y = i / width as usize;
-        let rgba = [image.get(x, y, 0), image.get(x, y, 1), image.get(x, y, 2), 255];
+        let rgba = [
+            image.get(x, y, 0),
+            image.get(x, y, 1),
+            image.get(x, y, 2),
+            255,
+        ];
         pixel.copy_from_slice(&rgba);
     }
 }
