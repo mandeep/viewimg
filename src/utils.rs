@@ -1,16 +1,3 @@
-#![allow(unused)]
-
-use exr::image::Image;
-use exr::prelude::f16;
-
-// pub fn find_min_max(image: &Image) -> (f32, f32) {
-//     let min_max = match &image.data {
-//         (data.iter().cloned().fold(0.0 / 0.0, f32::min), data.iter().cloned().fold(0.0 / 0.0, f32::max))
-//     }
-
-//     min_max
-// }
-
 pub fn normalize_f32(value: f32, minimum: f32, maximum: f32) -> f32 {
     (value - minimum) / (maximum - minimum)
 }
@@ -39,4 +26,9 @@ pub fn compensate(value: f32) -> u8 {
     compensated_value = gamma_correct(compensated_value, 2.2);
 
     clamp_rgb(255.0 * compensated_value * 2.0f32.powf(-1.0)) as u8
+}
+
+pub fn f32_to_u8(pixel: f32) -> u8 {
+    let corrected = gamma_correct(pixel.max(0.0), 2.2);
+    clamp_rgb(corrected * 255.0).round() as u8
 }

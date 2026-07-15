@@ -2,12 +2,12 @@ use std::path::Path;
 
 use clap::{crate_version, App, Arg};
 
-mod macros;
-mod reader;
-mod render;
-mod utils;
+pub mod macros;
+pub mod reader;
+pub mod render;
+pub mod utils;
 
-use crate::reader::{read_exr_image, read_hdr_image};
+use crate::reader::read_image;
 use crate::render::render;
 
 fn main() {
@@ -25,25 +25,16 @@ fn main() {
 
     let filepath = Path::new(&file);
 
-    if filepath.is_file() {
-        if let Some(extension) = filepath.extension() {
-            let image_buffer = match extension.to_str().unwrap() {
-                "exr" => match read_exr_image(filepath) {
-                    Ok(image) => image,
-                    Err(error) => exit!("{:?}", error),
-                },
+    if !filepath.is_file() {
+       exit!("ERROR: Could not read path: {}. Please provide a valid image path.", filepath.display());
+    }
 
-                _ => match read_hdr_image(filepath) {
-                    Ok(image) => image,
-                    Err(error) => exit!("{:?}", error),
-                },
-            };
+    let image_buffer = match read_image(filepath) {
+        Ok(image) => image,
+        Err(error) => exit!("{:?}", error),
+    };
 
-            if let Err(error) = render(image_buffer, filepath) {
-                exit!("{}", error);
-            }
-        }
-    } else {
-        exit!("ERROR: Could not read path. Please provide a valid HDR image path.");
+    if let Err(error) = render(image_buffer, filepath) {
+        exit!("{}", error);
     }
 }
