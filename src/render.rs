@@ -5,13 +5,14 @@ use pixels::{Error, Pixels, SurfaceTexture};
 use winit::dpi::{PhysicalPosition, PhysicalSize};
 use winit::event::{Event, VirtualKeyCode};
 use winit::event_loop::{ControlFlow, EventLoop};
+use winit::monitor::MonitorHandle;
 use winit::window::{Icon, Window, WindowBuilder};
 use winit_input_helper::WinitInputHelper;
 
 use crate::exit;
 
 const ICON_BYTES: &[u8] = include_bytes!("../assets/icon.png");
-const TASKBAR_MARGIN: u32 = 100;
+const TASKBAR_MARGIN: f32 = 48.0;
 
 enum Sizing {
     Native,
@@ -63,8 +64,7 @@ pub fn render(image: ImageBuffer<Rgb<u8>, Vec<u8>>, file: &Path) -> Result<(), E
                 if input.update(&event) {
                     if input.key_pressed(VirtualKeyCode::Escape)
                         || input.key_pressed(VirtualKeyCode::Q)
-                        || input.quit()
-                    {
+                        || input.quit() {
                         *control_flow = ControlFlow::Exit;
                     }
 
@@ -81,10 +81,11 @@ pub fn render(image: ImageBuffer<Rgb<u8>, Vec<u8>>, file: &Path) -> Result<(), E
 
 fn calculate_dimensions(image: &ImageBuffer<Rgb<u8>, Vec<u8>>, event_loop: &EventLoop<()>) -> ((u32, u32), Sizing) {
     let (image_width, image_height) = image.dimensions();
-    let monitor_size = event_loop.primary_monitor().unwrap().size();
+    let monitor = event_loop.primary_monitor().unwrap();
+    let margin = calculate_taskbar_margin(&monitor);
 
-    let usable_width = monitor_size.width;
-    let usable_height = monitor_size.height.saturating_sub(TASKBAR_MARGIN);
+    let usable_width = monitor.size().width;
+    let usable_height = monitor.size().height.saturating_sub(margin);
 
     if image_width <= usable_width && image_height <= usable_height {
         return ((image_width, image_height), Sizing::Native);
@@ -100,12 +101,6 @@ fn calculate_dimensions(image: &ImageBuffer<Rgb<u8>, Vec<u8>>, event_loop: &Even
     ((new_width, new_height),  Sizing::Scaled { original: (image_width, image_height) })
 }
 
-fn resize_image(image: &ImageBuffer<Rgb<u8>, Vec<u8>>, width: u32, height: u32) -> ImageBuffer<Rgb<u8>, Vec<u8>> {
-    let resized_image = image::imageops::resize(image, width, height, image::imageops::FilterType::Lanczos3);
-
-    resized_image
-}
-
 fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Path) -> Window {
     let size = PhysicalSize::new(width, height);
 
@@ -117,10 +112,12 @@ fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Pat
 
     let window_icon = load_icon();
 
-    let monitor_size = event_loop.primary_monitor().unwrap().size();
-    let usable_height = monitor_size.height.saturating_sub(TASKBAR_MARGIN);
+    let monitor = event_loop.primary_monitor().unwrap();
+    let margin = calculate_taskbar_margin(&monitor);
+
+    let usable_height = monitor.size().height.saturating_sub(margin);
     let position = PhysicalPosition::new(
-        monitor_size.width.saturating_sub(width) / 2,
+        monitor.size().width.saturating_sub(width) / 2,
         usable_height.saturating_sub(height) / 2,
     );
 
@@ -129,9 +126,9 @@ fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Pat
         .with_window_icon(Some(window_icon))
         .with_inner_size(size)
         .with_position(position)
-        .with_resizable(true)
+        .with_resizable(false)
         .with_decorations(false)
-        .build(&event_loop)
+        .build(event_loop)
         .unwrap();
 
     window
@@ -148,4 +145,14 @@ fn draw_pixels(frame: &mut [u8], image: &ImageBuffer<Rgb<u8>, Vec<u8>>) {
         frame_buffer[..3].copy_from_slice(image_buffer);
         frame_buffer[3] = 255;
     }
+}
+
+fn resize_image(image: &ImageBuffer<Rgb<u8>, Vec<u8>>, width: u32, height: u32) -> ImageBuffer<Rgb<u8>, Vec<u8>> {
+    let resized_image = image::imageops::resize(image, width, height, image::imageops::FilterType::Lanczos3);
+
+    resized_image
+}
+
+fn calculate_taskbar_margin(monitor: &MonitorHandle) -> u32 {
+    (TASKBAR_MARGIN * monitor.scale_factor() as f32).round() as u32
 }

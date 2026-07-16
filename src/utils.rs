@@ -10,7 +10,7 @@ pub fn clamp_f32(value: f32, lower_bound: f32, upper_bound: f32) -> f32 {
 }
 
 pub fn clamp_rgb(value: f32) -> f32 {
-    value.min(255.0).max(0.0)
+    value.clamp(0.0, 255.0)
 }
 
 pub fn gamma_correct(luminance: f32, gamma: f32) -> f32 {
