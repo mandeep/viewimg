@@ -9,6 +9,7 @@ use winit::monitor::MonitorHandle;
 use winit::window::{Icon, Window, WindowBuilder};
 use winit_input_helper::WinitInputHelper;
 
+use crate::config::RenderConfig;
 use crate::exit;
 
 const ICON_BYTES: &[u8] = include_bytes!("../assets/icon.png");
@@ -26,10 +27,14 @@ fn load_icon() -> Icon {
     Icon::from_rgba(img.into_raw(), width, height).expect("Failed to create icon.")
 }
 
-pub fn render(image: ImageBuffer<Rgb<u8>, Vec<u8>>, file: &Path) -> Result<(), Error> {
+pub fn render(image: ImageBuffer<Rgb<u8>, Vec<u8>>, file: &Path, config: RenderConfig) -> Result<(), Error> {
     let event_loop = EventLoop::new();
 
-    let ((width, height), sizing) = calculate_dimensions(&image, &event_loop);
+    let ((width, height), sizing) = if config.scale_image {
+        calculate_dimensions(&image, &event_loop)
+    } else {
+        (image.dimensions(), Sizing::Native)
+    };
 
     if width == 0 || height == 0 {
         exit!("Failed to get image dimensions");

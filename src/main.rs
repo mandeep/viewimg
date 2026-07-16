@@ -2,11 +2,13 @@ use std::path::Path;
 
 use clap::{crate_version, App, Arg};
 
+pub mod config;
 pub mod macros;
 pub mod reader;
 pub mod render;
 pub mod utils;
 
+use crate::config::RenderConfig;
 use crate::reader::read_image;
 use crate::render::render;
 
@@ -18,6 +20,11 @@ fn main() {
                 .help("The file path to the image to view")
                 .index(1)
                 .required(true),
+        )
+        .arg(
+            Arg::with_name("native")
+                .long("native") // long name required for clap to treat this argument as a flag
+                .help("View the image at its native resolution rather than scaling to fit the display")
         )
         .get_matches();
 
@@ -34,7 +41,12 @@ fn main() {
         Err(error) => exit!("{:?}", error),
     };
 
-    if let Err(error) = render(image_buffer, filepath) {
+    let config = RenderConfig {
+        scale_image: !matches.is_present("native"),
+        ..Default::default()
+    };
+
+    if let Err(error) = render(image_buffer, filepath, config) {
         exit!("{}", error);
     }
 }
