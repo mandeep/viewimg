@@ -23,6 +23,7 @@ fn main() {
         )
         .arg(
             Arg::with_name("native")
+                .short("n")
                 .long("native") // long name required for clap to treat this argument as a flag
                 .help("View the image at its native resolution rather than scaling to fit the display")
         )
