@@ -18,7 +18,9 @@ using a gamma of 2.2.
 Installation
 ============
 
-To install viewimg run `cargo install viewimg` in a terminal prompt.
+viewimg can be installed via cargo with the following command in a terminal prompt:
+
+    $  cargo install viewimg
 
 Note: Vulkan must be installed on the target system in order for viewimg to work correctly.
 For Debian users this can be done with the command `sudo apt install mesa-vulkan-drivers`.
