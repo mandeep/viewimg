@@ -2,13 +2,13 @@ use std::path::Path;
 
 use clap::{crate_version, App, Arg};
 
-pub mod config;
 pub mod macros;
+pub mod options;
 pub mod reader;
 pub mod render;
 pub mod utils;
 
-use crate::config::RenderConfig;
+use crate::options::RenderOptions;
 use crate::reader::read_image;
 use crate::render::render;
 
@@ -42,12 +42,12 @@ fn main() {
         Err(error) => exit!("{:?}", error),
     };
 
-    let config = RenderConfig {
+    let options = RenderOptions {
         scale_image: !matches.is_present("native"),
         ..Default::default()
     };
 
-    if let Err(error) = render(image_buffer, filepath, config) {
+    if let Err(error) = render(image_buffer, filepath, options) {
         exit!("{}", error);
     }
 }
