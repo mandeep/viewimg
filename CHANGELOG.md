@@ -6,8 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- Add command line flag that disables scaling of images prior to displaying in window
 - Correctly measure usable workspace across platforms rather than using arbitrary taskbar size
+
+## [0.17.0] - 2026-07-19
+- Add command line flag that disables scaling of images prior to displaying in window
 
 ## [0.16.0] - 2026-07-15
 - Replace deprecated image2 crate with image crate
