@@ -30,7 +30,7 @@ For Debian users this can be done with the command `sudo apt install mesa-vulkan
 To use viewimg you can run `viewimg` in a terminal with the path to the
 image file that you wish to open:
 
-    $  viewimg tests/WideColorGamut.exr
+    $  viewimg tests/StillLife.exr
 
 To close the viewimg window, one can press the Esc key. Left Mouse Button click and hold
 can be used to drag the window around the display.
