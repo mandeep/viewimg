@@ -43,7 +43,8 @@ pub fn render(image: ImageBuffer<Rgb<u8>, Vec<u8>>, file: &Path, options: Render
     let image_to_render = match sizing {
         Sizing::Scaled { original: (original_width, original_height) } => {
             println!(
-                "Note: the image was scaled down from {}x{} to {}x{} to fit the display.",
+                "Note: {} was scaled down from {}x{} to {}x{} to fit the display.",
+                file.file_name().unwrap_or(file.as_os_str()).display(),
                 original_width, original_height, width, height
             );
             resize_image(&image, width, height)
