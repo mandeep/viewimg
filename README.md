@@ -7,7 +7,7 @@ image viewer that quickly opens OpenEXR and Radiance HDR images with the purpose
 seeing the image contents. There is no editing component to this application,
 therefore tone mapping and other editing operators are not supported.
 
-The typical use case of viewimg would be to view f32 images immediately after rendering.
+The typical use case of viewimg would be to view HDR images immediately after rendering.
 
 Luminance correction is applied to both OpenEXR and Radiance HDR images. OpenEXR images
 are corrected using the same compensation as [exrdisplay](https://lists.aswf.io/g/openexr-dev/messages?page=235&after=1078387999000000000&subsort=1) whereas Radiance HDR images are gamma corrected
