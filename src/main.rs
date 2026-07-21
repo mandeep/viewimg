@@ -15,6 +15,8 @@ use crate::render::render;
 fn main() {
     let matches = App::new("viewimg")
         .version(crate_version!())
+        .usage("viewimg <image> [FLAGS]")
+        .template("{bin} {version}\n\nUSAGE:\n    {usage}\n\nARGS:\n{positionals}\n\nFLAGS:\n{flags}\n")
         .arg(
             Arg::with_name("image")
                 .help("The file path to the image to view")
