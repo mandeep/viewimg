@@ -32,7 +32,27 @@ image file that you wish to open:
 
     $  viewimg tests/StillLife.exr
 
+![screenshot](screenshot.png "viewimg window screenshot")
+
 To close the viewimg window, one can press the Esc key. Left Mouse Button click and hold
 can be used to drag the window around the display.
 
-![screenshot](screenshot.png "viewimg window screenshot")
+    $ viewimg --help
+
+    viewimg
+    A simple HDR image viewer
+
+    USAGE:
+        viewimg <image> [FLAGS]
+
+    ARGS:
+        <image>    The file path to the image to view
+
+    FLAGS:
+        -h, --help       Prints help information
+        -n, --native     View the image at its native resolution rather than scaling to fit the display
+        -V, --version    Prints version information
+
+    SHORTCUTS:
+        Left Click    Drag the viewimg window
+        Q, Esc        Quit the program
