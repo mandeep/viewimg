@@ -15,8 +15,11 @@ use crate::render::render;
 fn main() {
     let matches = App::new("viewimg")
         .version(crate_version!())
+        .about("A simple HDR image viewer")
         .usage("viewimg <image> [FLAGS]")
-        .template("{bin} {version}\n\nUSAGE:\n    {usage}\n\nARGS:\n{positionals}\n\nFLAGS:\n{flags}\n")
+        // template needs to be updated anytime we change something in the CLI.
+        // clap will no longer update the help output automatically
+        .template("{bin} {version}\n{about}\n\nUSAGE:\n    {usage}\n\nARGS:\n{positionals}\n\nFLAGS:\n{flags}\n")
         .arg(
             Arg::with_name("image")
                 .help("The file path to the image to view")
