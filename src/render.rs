@@ -112,9 +112,9 @@ fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Pat
 
     let filename = file
         .file_name()
-        .unwrap_or(std::ffi::OsStr::new("viewimg"))
-        .to_str()
-        .unwrap_or("viewimg");
+        .and_then(|name| name.to_str())
+        .unwrap_or("viewimg")
+        .to_string();
 
     let window_icon = load_icon();
 
@@ -155,7 +155,6 @@ fn draw_pixels(frame: &mut [u8], image: &ImageBuffer<Rgb<u8>, Vec<u8>>) {
 
 fn resize_image(image: &ImageBuffer<Rgb<u8>, Vec<u8>>, width: u32, height: u32) -> ImageBuffer<Rgb<u8>, Vec<u8>> {
     let resized_image = image::imageops::resize(image, width, height, image::imageops::FilterType::Lanczos3);
-
     resized_image
 }
 
