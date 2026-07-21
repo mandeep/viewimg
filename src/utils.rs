@@ -17,14 +17,22 @@ pub fn gamma_correct(luminance: f32, gamma: f32) -> f32 {
     luminance.powf(1.0 / gamma)
 }
 
-/// Reference: https://www.openexr.com/using.html
+/// References:
+/// The original link is below however it is no longer in existence so the archive.is link was created.
+/// https://www.openexr.com/using.html
+/// https://archive.is/QnNQV
 pub fn compensate(value: f32) -> u8 {
     let mut compensated_value = 0.0f32.max(value);
 
+    // the below steps were taken from an older version of exrdisplay.
+    // I believe the knee was solved for f = 0.16 and plugged into log(x * f + 1) / f.
     compensated_value *= 2.0f32.powf(2.47393);
     compensated_value = (compensated_value * 0.16 + 1.0).ln() / 0.16;
     compensated_value = gamma_correct(compensated_value, 2.2);
 
+    // the last step calls for 2.0 ^ -3.5, however -1.0 results in proper
+    // brightness on newer displays, or so it seems. Probably because the knee
+    // is applied unconditionally.
     clamp_rgb(255.0 * compensated_value * 2.0f32.powf(-1.0)) as u8
 }
 
