@@ -17,9 +17,10 @@ fn main() {
         .version(crate_version!())
         .about("A simple HDR image viewer")
         .usage("viewimg <image> [FLAGS]")
+        .after_help("SHORTCUTS:\n    Left Click    Drag the viewimg window\n    Q, Esc        Quit the program")
         // template needs to be updated anytime we change something in the CLI.
         // clap will no longer update the help output automatically
-        .template("{bin} {version}\n{about}\n\nUSAGE:\n    {usage}\n\nARGS:\n{positionals}\n\nFLAGS:\n{flags}\n")
+        .template("{bin} {version}\n{about}\n\nUSAGE:\n    {usage}\n\nARGS:\n{positionals}\n\nFLAGS:\n{flags}\n\n{after-help}\n")
         .arg(
             Arg::with_name("image")
                 .help("The file path to the image to view")
