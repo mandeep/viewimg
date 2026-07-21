@@ -1,4 +1,5 @@
-![header](header.png "viewimg")
+# viewimg
+
 [![crates](https://img.shields.io/crates/v/viewimg?style=flat-square)](https://crates.io/crates/viewimg) [![license](https://img.shields.io/crates/l/viewimg?style=flat-square)](https://crates.io/crates/viewimg)
 
 viewimg is an image viewer intended to be used with OpenEXR and Radiance HDR images, however
@@ -15,8 +16,7 @@ using a gamma of 2.2.
 
 
 
-Installation
-============
+## Installation
 
 viewimg can be installed via cargo with the following command in a terminal prompt:
 
@@ -25,8 +25,7 @@ viewimg can be installed via cargo with the following command in a terminal prom
 Note: Vulkan must be installed on the target system in order for viewimg to work correctly.
 For Debian users this can be done with the command `sudo apt install mesa-vulkan-drivers`.
 
-Usage
-=====
+## Usage
 
 To use viewimg you can run `viewimg` in a terminal with the path to the
 image file that you wish to open:
