@@ -81,7 +81,9 @@ pub fn render(image: ImageBuffer<Rgb<u8>, Vec<u8>>, file: &Path, options: Render
 
 fn calculate_dimensions(image: &ImageBuffer<Rgb<u8>, Vec<u8>>, event_loop: &EventLoop<()>) -> ((u32, u32), Sizing) {
     let (image_width, image_height) = image.dimensions();
-    let monitor = event_loop.primary_monitor().unwrap();
+    let monitor = event_loop.primary_monitor()
+        .or_else(|| event_loop.available_monitors().next())
+        .expect("No monitors found.");
     let margin = calculate_taskbar_margin(&monitor);
 
     let usable_width = monitor.size().width;
@@ -112,7 +114,9 @@ fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Pat
 
     let window_icon = load_icon(ICON_BYTES).ok();
 
-    let monitor = event_loop.primary_monitor().unwrap();
+    let monitor = event_loop.primary_monitor()
+        .or_else(|| event_loop.available_monitors().next())
+        .expect("No monitors found.");
     let margin = calculate_taskbar_margin(&monitor);
 
     let usable_height = monitor.size().height.saturating_sub(margin);
@@ -129,7 +133,7 @@ fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Pat
         .with_resizable(false)
         .with_decorations(false)
         .build(event_loop)
-        .unwrap();
+        .expect("Failed to build window.");
 
     window
 }
@@ -137,7 +141,7 @@ fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Pat
 fn create_pixel_buffer(window: &Window, width: u32, height: u32) -> Pixels {
     let surface_size = window.inner_size();
     let surface_texture = SurfaceTexture::new(surface_size.width, surface_size.height, window);
-    Pixels::new(width, height, surface_texture).unwrap()
+    Pixels::new(width, height, surface_texture).expect("Failed to build pixel buffer.")
 }
 
 fn draw_pixels(frame: &mut [u8], image: &ImageBuffer<Rgb<u8>, Vec<u8>>) {
