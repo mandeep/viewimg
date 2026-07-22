@@ -1,7 +1,8 @@
+use std::error::Error;
 use std::path::Path;
 
 use image::{ImageBuffer, Rgb};
-use pixels::{Error, Pixels, SurfaceTexture};
+use pixels::{Pixels, SurfaceTexture};
 use winit::dpi::{PhysicalPosition, PhysicalSize};
 use winit::event::{Event, VirtualKeyCode};
 use winit::event_loop::{ControlFlow, EventLoop};
@@ -20,14 +21,7 @@ enum Sizing {
     Scaled { original: (u32, u32) },
 }
 
-fn load_icon() -> Icon {
-    let img = image::load_from_memory(ICON_BYTES).unwrap().into_rgba8();
-    let (width, height) = img.dimensions();
-
-    Icon::from_rgba(img.into_raw(), width, height).expect("Failed to create icon.")
-}
-
-pub fn render(image: ImageBuffer<Rgb<u8>, Vec<u8>>, file: &Path, options: RenderOptions) -> Result<(), Error> {
+pub fn render(image: ImageBuffer<Rgb<u8>, Vec<u8>>, file: &Path, options: RenderOptions) -> Result<(), pixels::Error> {
     let event_loop = EventLoop::new();
 
     let ((width, height), sizing) = if options.scale_image {
@@ -116,7 +110,7 @@ fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Pat
         .unwrap_or("viewimg")
         .to_string();
 
-    let window_icon = load_icon();
+    let window_icon = load_icon(ICON_BYTES).ok();
 
     let monitor = event_loop.primary_monitor().unwrap();
     let margin = calculate_taskbar_margin(&monitor);
@@ -129,7 +123,7 @@ fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Pat
 
     let window = WindowBuilder::new()
         .with_title(filename)
-        .with_window_icon(Some(window_icon))
+        .with_window_icon(window_icon)
         .with_inner_size(size)
         .with_position(position)
         .with_resizable(false)
@@ -156,6 +150,13 @@ fn draw_pixels(frame: &mut [u8], image: &ImageBuffer<Rgb<u8>, Vec<u8>>) {
 fn resize_image(image: &ImageBuffer<Rgb<u8>, Vec<u8>>, width: u32, height: u32) -> ImageBuffer<Rgb<u8>, Vec<u8>> {
     let resized_image = image::imageops::resize(image, width, height, image::imageops::FilterType::Lanczos3);
     resized_image
+}
+
+fn load_icon(icon: &[u8]) -> Result<Icon, Box<dyn Error>> {
+    let img = image::load_from_memory(icon)?.into_rgba8();
+    let (width, height) = img.dimensions();
+
+    Ok(Icon::from_rgba(img.into_raw(), width, height)?)
 }
 
 fn calculate_taskbar_margin(monitor: &MonitorHandle) -> u32 {
