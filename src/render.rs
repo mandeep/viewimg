@@ -13,8 +13,8 @@ use winit_input_helper::WinitInputHelper;
 use crate::options::RenderOptions;
 use crate::exit;
 
-const ICON_BYTES: &[u8] = include_bytes!("../assets/icon.png");
-const TASKBAR_MARGIN: f32 = 48.0;
+const ICON: &[u8] = include_bytes!("../assets/icon.png");
+const MARGIN: f32 = 48.0;
 
 enum Sizing {
     Native,
@@ -112,7 +112,7 @@ fn create_window(width: u32, height: u32, event_loop: &EventLoop<()>, file: &Pat
         .unwrap_or("viewimg")
         .to_string();
 
-    let window_icon = load_icon(ICON_BYTES).ok();
+    let window_icon = load_icon(ICON).ok();
 
     let monitor = event_loop.primary_monitor()
         .or_else(|| event_loop.available_monitors().next())
@@ -164,5 +164,5 @@ fn load_icon(icon: &[u8]) -> Result<Icon, Box<dyn Error>> {
 }
 
 fn calculate_taskbar_margin(monitor: &MonitorHandle) -> u32 {
-    (TASKBAR_MARGIN * monitor.scale_factor() as f32).round() as u32
+    (MARGIN * monitor.scale_factor() as f32).round() as u32
 }
