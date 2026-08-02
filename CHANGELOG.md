@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Correctly measure usable workspace across platforms rather than using arbitrary taskbar size
 
+## [0.18.0] - 2026-08-02
+- Reorder --help information page to better illustrate the order of commands
+- Note printed to stdout when rescaling image now includes image filename
+- Application no longer panics when errors are recoverable
+
 ## [0.17.0] - 2026-07-19
 - Add command line flag that disables scaling of images prior to displaying in window
 
